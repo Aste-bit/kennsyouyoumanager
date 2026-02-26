@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +22,19 @@
   --shadow-md:0 4px 12px rgba(0,0,0,0.06),0 2px 4px rgba(0,0,0,0.04);
   --shadow-lg:0 12px 32px rgba(0,0,0,0.08),0 4px 8px rgba(0,0,0,0.04);
 }
-body{font-family:var(--font);background:var(--surface-2);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.6;}
+[data-theme="dark"]{
+  --ink:#e8e8e8;--ink-2:#c0c0c0;--ink-3:#909090;--ink-4:#686868;--ink-5:#404040;
+  --surface:#1a1a1e;--surface-2:#222226;--surface-3:#2e2e33;
+  --green:#3dbd6e;--green-light:#1a2e22;--green-muted:#1e4430;
+  --amber:#e0a620;--amber-light:#2e2818;--amber-muted:#4a3d10;
+  --red:#ef6b6b;--red-light:#2e1a1a;
+  --purple:#9b8ee8;--purple-light:#252040;
+  --blue:#5b8def;--blue-light:#1a2440;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.2),0 1px 2px rgba(0,0,0,0.15);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.25),0 2px 4px rgba(0,0,0,0.15);
+  --shadow-lg:0 12px 32px rgba(0,0,0,0.35),0 4px 8px rgba(0,0,0,0.2);
+}
+body{font-family:var(--font);background:var(--surface-2);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.6;transition:background 0.3s,color 0.3s;}
 .container{max-width:880px;margin:0 auto;padding:0 16px;}
 @media(min-width:768px){.container{padding:0 32px;}}
 </style>
@@ -35,32 +47,40 @@ body{font-family:var(--font);background:var(--surface-2);color:var(--ink);min-he
 <script type="text/babel">
 const {useState,useEffect,useCallback,useMemo} = React;
 
-/* ═══ アラート文言の2トーン定義 ═══ */
-const ALERT_TONES = {
-  soft: {
-    stale: "しばらく更新がありません",
-    granularity: "もう少し具体的にできるかも",
-    overdue: "期限を過ぎています",
-    pace: "ペースが少しゆっくりです",
-    noGoal: "ゴールが未設定です",
-  },
-  factual: {
-    stale: "長期停滞の可能性",
-    granularity: "粒度が粗い（AI判定）",
-    overdue: "期限超過",
-    pace: "進捗ペース注意",
-    noGoal: "ゴール未設定",
-  }
+/* ═══ アラート文言（やわらかトーン固定） ═══ */
+const ALERT_TEXT = {
+  stale: "しばらく更新がありません",
+  granularity: "もう少し具体的にできるかも",
+  overdue: "期限を過ぎています",
+  pace: "ペースが少しゆっくりです",
+  noGoal: "ゴールが未設定です",
 };
-function getAlertText(alertKey, tone) {
-  if (!alertKey) return '';
-  return ALERT_TONES[tone]?.[alertKey] || alertKey;
+function getAlertText(alertKey) {
+  return ALERT_TEXT[alertKey] || alertKey || '';
 }
 
-/* ═══ ユーティリティ ═══ */
-function calcDays(d){return d?Math.ceil((new Date("2026-02-25")-new Date(d))/86400000):0;}
-function calcRemainingDays(d){return d?Math.ceil((new Date(d)-new Date("2026-02-25"))/86400000):null;}
+/* ═══ 基準日（動的） ═══ */
+const TODAY = new Date();
+TODAY.setHours(0,0,0,0);
+const TODAY_STR = `${TODAY.getFullYear()}.${String(TODAY.getMonth()+1).padStart(2,'0')}.${String(TODAY.getDate()).padStart(2,'0')}`;
+const WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const TODAY_DISPLAY = `${TODAY_STR} ${WEEKDAYS[TODAY.getDay()]}`;
+const TODAY_JP = `${TODAY.getFullYear()}年${TODAY.getMonth()+1}月${TODAY.getDate()}日（${'日月火水木金土'[TODAY.getDay()]}）`;
+
+/* ═══ ユーティリティ（統一ロジック） ═══ */
+function calcElapsedDays(d){return d?Math.ceil((TODAY-new Date(d))/86400000):0;}
+function calcRemainingDays(d){return d?Math.ceil((new Date(d)-TODAY)/86400000):null;}
 function formatShortDate(d){return d?d.slice(5).replace('-','/'):'';}
+
+function calcTimeInfo(setDate, deadline) {
+  const elapsed = calcElapsedDays(setDate);
+  const remaining = calcRemainingDays(deadline);
+  const totalSpan = elapsed + Math.max(0, remaining || 0);
+  const isOverdue = remaining !== null && remaining < 0;
+  const overdueDays = isOverdue ? Math.abs(remaining) : 0;
+  const timePercent = isOverdue ? 100 : (totalSpan > 0 ? Math.min(100, Math.max(0, (elapsed / totalSpan) * 100)) : 0);
+  return { elapsed, remaining, totalSpan, isOverdue, overdueDays, timePercent };
+}
 
 /* ═══ 三上大慈 自身のゴール ═══ */
 const MY_GOALS = [
@@ -88,7 +108,7 @@ const MY_GOALS = [
   {id:22,title:"運用担当者決める→割り振る",setDate:"2026-01-26",deadline:"2026-03-01",progress:40,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","ガバナンスの運用"]},
 ];
 
-/* ═══ 直下メンバー（全ゴール表示） ═══ */
+/* ═══ 直下メンバー ═══ */
 const MEMBERS = {
   "五十嵐壮太郎":{goals:[
     {id:101,title:"メモを作り提出",setDate:"2026-01-10",deadline:"2026-02-10",progress:10,status:"warning",alertKey:"stale",path:["コーポレート運営","顧客対応品質向上","メモを作り提出"]},
@@ -148,57 +168,42 @@ const MEMBERS = {
 const TREE_DATA={id:"root",title:"コーポレート部の健全性担保",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
   {id:"fin",title:"財務基盤の最適化",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
     {id:"cost",title:"コスト削減施策を回し切る",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-      {id:"g1",title:"【緊急】コスト削減施策を回し切る",owner:"三上大慈",isLeaf:true,status:"on_track",progress:55,children:[]},
-      {id:"g6",title:"クレカ切り替え",owner:"三上大慈",isLeaf:true,status:"on_track",progress:70,children:[]},
-      {id:"g7",title:"ツール検討",owner:"三上大慈",isLeaf:true,status:"on_track",progress:45,children:[]},
-      {id:"g20",title:"各アカウントの決済変更",owner:"三上大慈",isLeaf:true,status:"on_track",progress:35,children:[]},
+      {id:"c1",title:"クレカ切り替え",owner:"三上大慈",isLeaf:true,status:"on_track",progress:70,children:[]},
+      {id:"c2",title:"ツール検討",owner:"三上大慈",isLeaf:true,status:"on_track",progress:45,children:[]},
+      {id:"c3",title:"各アカウント決済変更",owner:"三上大慈",isLeaf:true,status:"on_track",progress:35,children:[]},
     ]},
-    {id:"acct",title:"経理・税務対応",owner:"井上津留美",isLeaf:false,status:"warning",children:[
-      {id:"g4",title:"支払調書の作成と配布",owner:"三上大慈",isLeaf:true,status:"warning",progress:10,children:[]},
-      {id:"g16",title:"決算書コピー",owner:"三上大慈",isLeaf:true,status:"on_track",progress:90,children:[]},
-      {id:"i201",title:"Freee契約",owner:"井上津留美",isLeaf:true,status:"on_track",progress:60,children:[]},
-      {id:"i203",title:"承認率入力",owner:"井上津留美",isLeaf:true,status:"warning",progress:20,children:[]},
+    {id:"tax",title:"経理・税務対応",owner:"三上大慈",isLeaf:false,status:"warning",children:[
+      {id:"t1",title:"支払調書の作成と配布",owner:"三上大慈",isLeaf:true,status:"warning",progress:10,children:[]},
+      {id:"t2",title:"決算書のコピー",owner:"三上大慈",isLeaf:true,status:"on_track",progress:90,children:[]},
+    ]},
+    {id:"acct",title:"口座管理",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
+      {id:"a1",title:"日本リスキリング口座開設",owner:"三上大慈",isLeaf:true,status:"on_track",progress:60,children:[]},
+      {id:"a2",title:"郵便局で開設手続き",owner:"三上大慈",isLeaf:true,status:"on_track",progress:30,children:[]},
     ]},
     {id:"contract",title:"契約管理",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-      {id:"g11",title:"スキルプラス新規契約記録",owner:"三上大慈",isLeaf:true,status:"on_track",progress:30,children:[]},
-      {id:"g12",title:"契約マッチング",owner:"三上大慈",isLeaf:true,status:"on_track",progress:20,children:[]},
+      {id:"cn1",title:"スキルプラス新規契約記録",owner:"三上大慈",isLeaf:true,status:"on_track",progress:30,children:[]},
+      {id:"cn2",title:"契約とクーオフのマッチング",owner:"三上大慈",isLeaf:true,status:"on_track",progress:20,children:[]},
     ]},
-    {id:"bank",title:"口座管理",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-      {id:"g18",title:"リスキリング支援口座開設",owner:"三上大慈",isLeaf:true,status:"on_track",progress:60,children:[]},
-      {id:"g19",title:"郵便局開設手続き",owner:"三上大慈",isLeaf:true,status:"on_track",progress:30,children:[]},
-    ]},
-    {id:"g5",title:"報酬金額管理シートの運用",owner:"三上大慈",isLeaf:true,status:"on_track",progress:50,children:[]},
   ]},
   {id:"org",title:"組織管理基盤",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
     {id:"gov",title:"ガバナンスの運用",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-      {id:"g2",title:"ガバナンスの運用",owner:"三上大慈",isLeaf:true,status:"on_track",progress:40,children:[]},
-      {id:"g21",title:"運用方針の策定",owner:"三上大慈",isLeaf:true,status:"on_track",progress:50,children:[]},
-      {id:"g22",title:"運用担当者決定・割り振り",owner:"三上大慈",isLeaf:true,status:"on_track",progress:40,children:[]},
+      {id:"g1",title:"運用方針の策定",owner:"三上大慈",isLeaf:true,status:"on_track",progress:50,children:[]},
+      {id:"g2",title:"運用担当者決める→割り振る",owner:"三上大慈",isLeaf:true,status:"on_track",progress:40,children:[]},
     ]},
     {id:"legal",title:"法務・登記",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-      {id:"g9",title:"株主名簿の作成",owner:"三上大慈",isLeaf:true,status:"on_track",progress:25,children:[]},
-      {id:"g10",title:"高知裁判進める",owner:"三上大慈",isLeaf:true,status:"on_track",progress:15,children:[]},
-      {id:"g14",title:"登記簿謄本取得",owner:"三上大慈",isLeaf:true,status:"on_track",progress:80,children:[]},
-      {id:"g15",title:"印鑑証明書取得",owner:"三上大慈",isLeaf:true,status:"on_track",progress:80,children:[]},
-      {id:"g17",title:"事業内容書類作成",owner:"三上大慈",isLeaf:true,status:"on_track",progress:40,children:[]},
+      {id:"l1",title:"登記簿謄本取得",owner:"三上大慈",isLeaf:true,status:"on_track",progress:80,children:[]},
+      {id:"l2",title:"印鑑証明書取得",owner:"三上大慈",isLeaf:true,status:"on_track",progress:80,children:[]},
+      {id:"l3",title:"株主名簿の作成",owner:"三上大慈",isLeaf:true,status:"on_track",progress:25,children:[]},
+      {id:"l4",title:"高知裁判進める",owner:"三上大慈",isLeaf:true,status:"on_track",progress:15,children:[]},
+      {id:"l5",title:"事業内容がわかる書類",owner:"三上大慈",isLeaf:true,status:"on_track",progress:40,children:[]},
     ]},
-    {id:"g8",title:"台さんに資料共有",owner:"三上大慈",isLeaf:true,status:"on_track",progress:20,children:[]},
   ]},
   {id:"team",title:"チームマネジメント",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-    {id:"g3",title:"全員のゴール健全性担保",owner:"三上大慈",isLeaf:true,status:"on_track",progress:30,children:[]},
-    {id:"addmgt",title:"Addness管理",owner:"星野舜",isLeaf:false,status:"on_track",children:[
-      {id:"h501",title:"全員ゴール設定100%",owner:"星野舜",isLeaf:true,status:"on_track",progress:65,children:[]},
-      {id:"h502",title:"Todo化100%",owner:"星野舜",isLeaf:true,status:"on_track",progress:70,children:[]},
-    ]},
-    {id:"dashpj",title:"ダッシュボード構築",owner:"星野舜",isLeaf:false,status:"on_track",children:[
-      {id:"h504",title:"Web App改修",owner:"星野舜",isLeaf:true,status:"on_track",progress:35,children:[]},
-      {id:"h505",title:"基盤構築PJ",owner:"星野舜",isLeaf:true,status:"on_track",progress:60,children:[]},
-    ]},
-    {id:"h503",title:"取引先マスターデータ",owner:"星野舜",isLeaf:true,status:"warning",progress:5,children:[]},
-    {id:"comp",title:"コンプライアンス",owner:"伊藤正",isLeaf:false,status:"on_track",children:[
-      {id:"i301",title:"定常業務依頼",owner:"伊藤正",isLeaf:true,status:"on_track",progress:50,children:[]},
-      {id:"i302",title:"特商法チェックオペ",owner:"伊藤正",isLeaf:true,status:"on_track",progress:35,children:[]},
-    ]},
+    {id:"tm1",title:"全員のゴール健全性担保",owner:"三上大慈",isLeaf:true,status:"on_track",progress:30,children:[]},
+  ]},
+  {id:"comp",title:"コンプライアンス",owner:"伊藤正",isLeaf:false,status:"on_track",children:[
+    {id:"i301",title:"ほっしーに定常業務依頼",owner:"伊藤正",isLeaf:true,status:"on_track",progress:50,children:[]},
+    {id:"i302",title:"特商法チェックオペ",owner:"伊藤正",isLeaf:true,status:"on_track",progress:35,children:[]},
   ]},
 ]};
 
@@ -211,28 +216,28 @@ const Icon={
   close:p=><svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...p}><path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>,
   alert:p=><svg width="13" height="13" viewBox="0 0 13 13" fill="none" {...p}><path d="M6.5 1L12 11.5H1L6.5 1Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/><path d="M6.5 5V7.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/><circle cx="6.5" cy="9.2" r="0.6" fill="currentColor"/></svg>,
   external:p=><svg width="12" height="12" viewBox="0 0 12 12" fill="none" {...p}><path d="M9 3L4.5 7.5M9 3H6M9 3V6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/><path d="M9 8V9.5A1.5 1.5 0 017.5 11H2.5A1.5 1.5 0 011 9.5V4.5A1.5 1.5 0 012.5 3H4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>,
+  sun:p=><svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...p}><circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.3"/><path d="M8 1.5V3M8 13V14.5M1.5 8H3M13 8H14.5M3.4 3.4L4.5 4.5M11.5 11.5L12.6 12.6M3.4 12.6L4.5 11.5M11.5 4.5L12.6 3.4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>,
+  moon:p=><svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...p}><path d="M13.5 8.5a5.5 5.5 0 01-6-6 5.5 5.5 0 106 6z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
 };
 
-/* ─── 2段プログレスバー ─── */
-function DualProgressBar({setDate,deadline,progress,isWarn}){
-  const elapsed=calcDays(setDate);
-  const rem=Math.max(0,calcRemainingDays(deadline)||0);
-  const total=elapsed+rem;
-  const timePercent=total>0?Math.min(100,(elapsed/total)*100):0;
+/* ─── 進捗バー + 残日数（シンプル版） ─── */
+function ProgressRow({setDate,deadline,progress,isWarn}){
+  const info = calcTimeInfo(setDate, deadline);
   const progressPercent=Math.min(100,Math.max(0,progress||0));
-  const gap=timePercent-progressPercent;
   return(
-    <div className="dual-bar">
-      <div className="dual-bar-row">
-        <span className="dual-bar-label">時間</span>
-        <div className="dual-bar-track"><div className="dual-bar-fill" style={{width:timePercent+"%",background:gap>30?'var(--red)':timePercent>70?'var(--amber)':'var(--ink-4)'}}/></div>
-        <span className="dual-bar-pct" style={{color:'var(--ink-3)'}}>{Math.round(timePercent)}%</span>
+    <div className="progress-row">
+      <div className="progress-bar-wrap">
+        <div className="progress-track">
+          <div className="progress-fill" style={{
+            width:progressPercent+"%",
+            background:isWarn?'var(--amber)':progressPercent>60?'var(--green)':'var(--blue)'
+          }}/>
+        </div>
+        <span className="progress-pct" style={{color:isWarn?'var(--amber)':progressPercent>60?'var(--green)':'var(--blue)'}}>{progressPercent}%</span>
       </div>
-      <div className="dual-bar-row">
-        <span className="dual-bar-label">進捗</span>
-        <div className="dual-bar-track"><div className="dual-bar-fill" style={{width:progressPercent+"%",background:isWarn?'var(--amber)':progressPercent>60?'var(--green)':'var(--blue)'}}/></div>
-        <span className="dual-bar-pct" style={{color:isWarn?'var(--amber)':'var(--green)'}}>{progressPercent}%</span>
-      </div>
+      <span className={info.isOverdue?"progress-days progress-days--overdue":"progress-days"} style={{color:info.isOverdue?'var(--red)':info.remaining!==null&&info.remaining<7?'var(--amber)':'var(--ink-3)'}}>
+        {info.isOverdue?`${info.overdueDays}日超過`:info.remaining!==null?`残${info.remaining}日`:''}
+      </span>
     </div>
   );
 }
@@ -269,30 +274,24 @@ function PathPopup({show,goal,onClose}){
   );
 }
 
-/* ─── ゴールカード ─── */
-function GoalCard({goal,onConfirm,onPath,delay=0,tone}){
+/* ─── ゴールカード（円形バッジ廃止） ─── */
+function GoalCard({goal,onConfirm,onPath,delay=0}){
   const[vis,setVis]=useState(false);
   useEffect(()=>{const t=setTimeout(()=>setVis(true),delay);return()=>clearTimeout(t);},[delay]);
   const isWarn=goal.status==="warning"||goal.alertKey;
   const remaining=calcRemainingDays(goal.deadline);
-  const alertText=getAlertText(goal.alertKey,tone);
+  const alertText=getAlertText(goal.alertKey);
   return(
     <div className={"g-card"+(isWarn?" g-card--warn":"")} style={{opacity:vis?1:0,transform:vis?"translateY(0)":"translateY(8px)",transition:"opacity 0.4s ease, transform 0.4s ease"}}>
-      <div className="g-top">
-        <div className="g-info">
-          <div className="g-title">{goal.title}</div>
-          {alertText&&<div className="g-alert"><Icon.alert style={{width:11,height:11}}/> {alertText}</div>}
-          <div className="g-meta">
-            <span>設定 {formatShortDate(goal.setDate)}</span>
-            {goal.deadline&&<><span className="g-meta-sep">→</span><span style={{color:remaining!==null&&remaining<0?'var(--red)':remaining!==null&&remaining<7?'var(--amber)':'var(--ink-3)'}}>期限 {formatShortDate(goal.deadline)}{remaining!==null&&(remaining<0?` (${Math.abs(remaining)}日超過)`:`（残${remaining}日）`)}</span></>}
-          </div>
-        </div>
-        <div className="g-progress-circle" style={{borderColor:isWarn?'var(--amber-muted)':(goal.progress||0)>60?'var(--green-muted)':'var(--blue-light)'}}>
-          <span className="g-progress-num" style={{color:isWarn?'var(--amber)':(goal.progress||0)>60?'var(--green)':'var(--blue)'}}>{goal.progress||0}</span>
-          <span className="g-progress-unit">%</span>
+      <div className="g-info">
+        <div className="g-title">{goal.title}</div>
+        {alertText&&<div className="g-alert"><Icon.alert style={{width:11,height:11}}/> {alertText}</div>}
+        <div className="g-meta">
+          <span>設定 {formatShortDate(goal.setDate)}</span>
+          {goal.deadline&&<><span className="g-meta-sep">→</span><span style={{color:remaining!==null&&remaining<0?'var(--red)':remaining!==null&&remaining<7?'var(--amber)':'var(--ink-3)'}}>期限 {formatShortDate(goal.deadline)}{remaining!==null&&(remaining<0?` (${Math.abs(remaining)}日超過)`:`（残${remaining}日）`)}</span></>}
         </div>
       </div>
-      <DualProgressBar setDate={goal.setDate} deadline={goal.deadline} progress={goal.progress} isWarn={isWarn}/>
+      <ProgressRow setDate={goal.setDate} deadline={goal.deadline} progress={goal.progress} isWarn={isWarn}/>
       <div className="g-actions">
         <button className="g-btn g-btn--path" onClick={()=>onPath(goal)}><Icon.route/> パス照会</button>
         {isWarn&&<button className={"g-btn g-btn--ack"+(goal.confirmed?" g-btn--acked":"")} onClick={()=>onConfirm(goal.id)}><Icon.check/> {goal.confirmed?"確認済み":"確認する"}</button>}
@@ -302,8 +301,8 @@ function GoalCard({goal,onConfirm,onPath,delay=0,tone}){
   );
 }
 
-/* ─── メンバーカード（全ゴール表示版） ─── */
-function MemberCard({name,goals,onConfirm,onPath,delay=0,tone}){
+/* ─── メンバーカード ─── */
+function MemberCard({name,goals,onConfirm,onPath,delay=0}){
   const[open,setOpen]=useState(false);
   const[vis,setVis]=useState(false);
   useEffect(()=>{const t=setTimeout(()=>setVis(true),delay);return()=>clearTimeout(t);},[delay]);
@@ -327,7 +326,7 @@ function MemberCard({name,goals,onConfirm,onPath,delay=0,tone}){
       </div>
       {open&&(
         <div className="m-body">
-          {goals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={onConfirm} onPath={onPath} delay={i*50} tone={tone}/>)}
+          {goals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={onConfirm} onPath={onPath} delay={i*50}/>)}
         </div>
       )}
     </div>
@@ -377,7 +376,7 @@ function LINEPhone({children}){
         <div className="phone-status"><span className="phone-time">9:50</span><div className="phone-island"/><div className="phone-status-icons"><div className="phone-battery"><div className="phone-battery-fill"/></div></div></div>
         <div className="line-nav"><div className="line-nav-back"><svg width="10" height="16" viewBox="0 0 10 16" fill="none"><path d="M8.5 1.5L2 8l6.5 6.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></div><div className="line-nav-name">フォーカスゴール通知</div><div style={{width:24}}/></div>
         <div className="line-chat">
-          <div className="line-date-pill">2026年2月25日（火）</div>
+          <div className="line-date-pill">{TODAY_JP}</div>
           <div className="line-msg-row">
             <div className="line-avatar-circle"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 14.5c0-3 3-5 7-5s7 2 7 5" stroke="#fff" strokeWidth="1.2"/><circle cx="8" cy="5" r="3.5" stroke="#fff" strokeWidth="1.2"/></svg></div>
             <div className="line-msg-col">
@@ -393,14 +392,13 @@ function LINEPhone({children}){
   );
 }
 
-/* ─── トーン切り替え ─── */
-function ToneSwitch({tone,onToggle}){
-  return(
-    <div className="tone-switch" onClick={onToggle}>
-      <span className="tone-switch-label">文言トーン:</span>
-      <span className={"tone-chip"+(tone==="soft"?" tone-chip--active":"")} style={tone==="soft"?{background:'var(--green-light)',color:'var(--green)'}:{}}>やわらか</span>
-      <span className={"tone-chip"+(tone==="factual"?" tone-chip--active":"")} style={tone==="factual"?{background:'var(--blue-light)',color:'var(--blue)'}:{}}>事実ベース</span>
-    </div>
+/* ─── ダークモード切り替え ─── */
+function DarkModeSwitch({dark, onToggle}){
+  return (
+    <button className="dm-switch" onClick={onToggle} title={dark ? "ライトモードに切替" : "ダークモードに切替"}>
+      {dark ? <Icon.sun style={{color:'var(--amber)'}}/> : <Icon.moon style={{color:'var(--ink-3)'}}/>}
+      <span className="dm-label">{dark ? "ライト" : "ダーク"}</span>
+    </button>
   );
 }
 
@@ -410,8 +408,13 @@ function App(){
   const[myGoals,setMyGoals]=useState(MY_GOALS);
   const[members,setMembers]=useState(MEMBERS);
   const[pathGoal,setPathGoal]=useState(null);
-  const[tone,setTone]=useState("soft");
-  const toggleTone=useCallback(()=>setTone(t=>t==="soft"?"factual":"soft"),[]);
+  const[dark,setDark]=useState(false);
+  const toggleDark=useCallback(()=>{
+    setDark(d=>{
+      document.documentElement.setAttribute('data-theme',d?'light':'dark');
+      return !d;
+    });
+  },[]);
 
   const handleConfirm=useCallback(id=>{
     setMyGoals(p=>p.map(g=>g.id===id?{...g,confirmed:!g.confirmed}:g));
@@ -424,6 +427,9 @@ function App(){
   const myAttention=myGoals.filter(g=>g.alertKey).length;
   const staleCount=allMG.filter(g=>g.alertKey==="stale").length;
   const granCount=allMG.filter(g=>g.alertKey==="granularity").length;
+
+  const myAlertGoals = useMemo(()=>myGoals.filter(g=>g.alertKey),[myGoals]);
+  const myOkGoals = useMemo(()=>myGoals.filter(g=>!g.alertKey),[myGoals]);
 
   const tabs=[
     {id:"mygoals",label:"今日のゴール"},
@@ -450,7 +456,8 @@ function App(){
             <div className="header-stat"><span className="header-stat-num">{entries.length}</span><span className="header-stat-label">直下</span></div>
             <div className="header-stat-divider"/>
             <div className="header-stat"><span className="header-stat-num" style={{color:attentionCount>0?'var(--amber)':'var(--green)'}}>{attentionCount}</span><span className="header-stat-label">注意項目</span></div>
-            <div className="header-date">2026.02.25 Tue</div>
+            <DarkModeSwitch dark={dark} onToggle={toggleDark}/>
+            <div className="header-date">{TODAY_DISPLAY}</div>
           </div>
         </div>
       </header>
@@ -461,20 +468,15 @@ function App(){
 
       <main className="main"><div className="container">
 
-        <ToneSwitch tone={tone} onToggle={toggleTone}/>
-
         {tab==="mygoals"&&(
           <div className="page fade-in">
             <div className="insight-card">
               <div className="insight-head"><div className="insight-icon">!</div><span className="insight-title">注目ポイント</span></div>
               <p className="insight-body">
-                {tone==="soft"
-                  ? <>「<strong style={{color:'var(--amber)'}}>支払調書の作成と配布</strong>」がしばらく更新されていません（42日経過）。また「<strong style={{color:'var(--amber)'}}>三上大のゴール</strong>」はもう少し具体的なアクションに分解できそうです。</>
-                  : <>「<strong style={{color:'var(--amber)'}}>支払調書の作成と配布</strong>」が42日経過で停滞中。期限を15日超過。「<strong style={{color:'var(--amber)'}}>三上大のゴール</strong>」は粒度が粗いため具体アクションに分解が必要。</>
-                }
+                「<strong style={{color:'var(--amber)'}}>支払調書の作成と配布</strong>」がしばらく更新されていません。また「<strong style={{color:'var(--amber)'}}>三上大のゴール</strong>」はもう少し具体的なアクションに分解できそうです。
               </p>
             </div>
-            <div className="goal-list">{myGoals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*40+80} tone={tone}/>)}</div>
+            <div className="goal-list">{myGoals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*40+80}/>)}</div>
           </div>
         )}
 
@@ -483,10 +485,7 @@ function App(){
             <div className="insight-card" style={{borderLeft:'3px solid var(--amber)'}}>
               <div className="insight-head"><div className="insight-icon" style={{background:'var(--amber-light)',color:'var(--amber)'}}>!</div><span className="insight-title">注意サマリー</span></div>
               <p className="insight-body">
-                {tone==="soft"
-                  ? <><strong style={{color:'var(--red)'}}>五十嵐壮太郎</strong>・<strong style={{color:'var(--red)'}}>谷口寿美子</strong>のゴールが1月初旬から更新されていません。<strong style={{color:'var(--amber)'}}>石川翔太</strong>・<strong style={{color:'var(--amber)'}}>貴志祐介</strong>はもう少し具体的にできるゴールがあります。<strong style={{color:'var(--green)'}}>星野舜</strong>は構築PJ順調ですが「取引先マスターデータ」が49日更新なしです。</>
-                  : <><strong style={{color:'var(--red)'}}>五十嵐壮太郎</strong>・<strong style={{color:'var(--red)'}}>谷口寿美子</strong>のゴールが1月初旬から停滞。<strong style={{color:'var(--amber)'}}>石川翔太</strong>・<strong style={{color:'var(--amber)'}}>貴志祐介</strong>は粒度が粗いゴールあり。<strong style={{color:'var(--green)'}}>星野舜</strong>は構築PJ順調だが「取引先マスターデータ」49日停滞。</>
-                }
+                <strong style={{color:'var(--red)'}}>五十嵐壮太郎</strong>・<strong style={{color:'var(--red)'}}>谷口寿美子</strong>のゴールが1月初旬から更新されていません。<strong style={{color:'var(--amber)'}}>石川翔太</strong>・<strong style={{color:'var(--amber)'}}>貴志祐介</strong>はもう少し具体的にできるゴールがあります。<strong style={{color:'var(--green)'}}>星野舜</strong>は構築PJ順調ですが「取引先マスターデータ」がしばらく更新なしです。
               </p>
             </div>
             <SummaryGrid items={[
@@ -495,7 +494,7 @@ function App(){
               {label:"更新なし",value:staleCount,accent:"var(--red)"},
               {label:"粒度確認",value:granCount,accent:"var(--amber)"},
             ]}/>
-            {entries.map(([name,data],i)=><MemberCard key={name} name={name} goals={data.goals} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*50+80} tone={tone}/>)}
+            {entries.map(([name,data],i)=><MemberCard key={name} name={name} goals={data.goals} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*50+80}/>)}
           </div>
         )}
 
@@ -523,51 +522,41 @@ function App(){
 
             <p className="line-section-label">自分のフォーカスゴール通知</p>
             <LINEPhone>
-              <div className="lb-head">今日のフォーカスゴール（{myGoals.length}件）</div>
-              <div className="lb-greet">おはようございます、三上大慈さん</div>
-              {myGoals.filter(g=>g.alertKey).map((g,i)=>{
+              <div className="lb-head">おはようございます、三上大慈さん</div>
+              <div className="lb-greet">フォーカスゴール {myGoals.length}件 ｜ 注意 {myAlertGoals.length}件</div>
+              {/* 異常のみ表示 */}
+              {myAlertGoals.map((g,i)=>{
                 const remaining=calcRemainingDays(g.deadline);
                 return(
                   <div key={i} className="lb-item lb-item--warn">
                     <div className="lb-item-title">{g.title}</div>
                     <div className="lb-item-meta">
-                      期限 {formatShortDate(g.deadline)}{remaining!==null&&(remaining<0?` (${Math.abs(remaining)}日超過)`:` (残${remaining}日)`)} ｜ 進捗 {g.progress||0}%
-                      <span className="lb-item-alert"> · {getAlertText(g.alertKey,tone)}</span>
+                      期限 {formatShortDate(g.deadline)}{remaining!==null&&remaining<0&&` (${Math.abs(remaining)}日超過)`}
+                      <span className="lb-item-alert"> · {getAlertText(g.alertKey)}</span>
                     </div>
                   </div>
                 );
               })}
-              {myGoals.filter(g=>!g.alertKey).slice(0,2).map((g,i)=>{
-                const remaining=calcRemainingDays(g.deadline);
-                return(
-                  <div key={i} className="lb-item">
-                    <div className="lb-item-title">{g.title}</div>
-                    <div className="lb-item-meta">期限 {formatShortDate(g.deadline)}{remaining!==null&&` (残${remaining}日)`} ｜ 進捗 {g.progress||0}%</div>
-                  </div>
-                );
-              })}
-              <div className="lb-more">他 {myGoals.length - myGoals.filter(g=>g.alertKey).length - 2}件は順調</div>
+              {myOkGoals.length>0&&<div className="lb-more">他 {myOkGoals.length}件は順調 ✓</div>}
               <div className="lb-suggest"><div className="lb-suggest-label">注目ポイント</div><div className="lb-suggest-text">
-                {tone==="soft"?"「支払調書」がしばらく更新されていません。「三上大のゴール」はもう少し具体的に分解しましょう。":"「支払調書」42日停滞・期限15日超過。「三上大のゴール」は粒度が粗いので分解を。"}
+                「支払調書」がしばらく更新されていません。「三上大のゴール」はもう少し具体的に分解しましょう。
               </div></div>
-              <div className="lb-btns"><div className="lb-btn">パス照会</div><div className="lb-btn lb-btn--primary">詳細 →</div></div>
+              <div className="lb-btns"><div className="lb-btn lb-btn--primary">Webで詳細を見る →</div></div>
             </LINEPhone>
 
             <p className="line-section-label" style={{marginTop:24}}>直下メンバー サマリー</p>
             <LINEPhone>
-              <div className="lb-head" style={{borderBottomColor:'var(--blue)'}}>直下メンバー（{entries.length}名）</div>
+              <div className="lb-head" style={{borderBottomColor:'#2563eb'}}>直下メンバー（{entries.length}名）</div>
               <div className="lb-greet">注意項目 {attentionCount}件 ｜ 詳細はWebで確認</div>
 
               {entries.map(([name,data],i)=>{
                 const alerts=data.goals.filter(g=>g.alertKey).length;
-                const avg=data.goals.length>0?Math.round(data.goals.reduce((s,g)=>s+(g.progress||0),0)/data.goals.length):0;
                 const hasAlert=alerts>0;
                 return(
                   <div key={i} className={"lb-member-row"+(hasAlert?" lb-member-row--warn":"")}>
                     <div className="lb-member-name">{name}</div>
                     <div className="lb-member-stats">
                       <span>{data.goals.length}件</span>
-                      <span className="lb-member-progress">進捗{avg}%</span>
                       {hasAlert
                         ? <span className="lb-member-alert">注意{alerts}</span>
                         : <span className="lb-member-ok">✓</span>
@@ -575,14 +564,14 @@ function App(){
                     </div>
                     {hasAlert&&<div className="lb-member-detail">
                       {data.goals.filter(g=>g.alertKey).map((g,j)=>(
-                        <div key={j} className="lb-member-issue">· {g.title}{tone==="soft"?"":" — "+getAlertText(g.alertKey,tone)}</div>
+                        <div key={j} className="lb-member-issue">· {g.title}</div>
                       ))}
                     </div>}
                   </div>
                 );
               })}
 
-              <div className="lb-btns" style={{marginTop:10}}><div className="lb-btn">注意を確認</div><div className="lb-btn lb-btn--primary">Web →</div></div>
+              <div className="lb-btns" style={{marginTop:10}}><div className="lb-btn lb-btn--primary">Webで詳細を見る →</div></div>
             </LINEPhone>
           </div>
         )}
@@ -596,7 +585,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 
 <style>
 /* ═══ Header ═══ */
-.header{background:var(--surface);border-bottom:1px solid var(--surface-3);padding:14px 0;}
+.header{background:var(--surface);border-bottom:1px solid var(--surface-3);padding:14px 0;transition:background 0.3s,border-color 0.3s;}
 .header-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 .header-left{display:flex;align-items:center;gap:14px;}
 .header-logo{display:flex;align-items:center;gap:10px;}
@@ -611,14 +600,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 .header-date{font-size:11px;color:var(--ink-4);font-variant-numeric:tabular-nums;}
 @media(min-width:768px){.header{padding:18px 0;}.header-logo-mark{width:40px;height:40px;font-size:17px;}.header-name{font-size:17px;}.header-stat-num{font-size:24px;}}
 
-/* ═══ Tone Switch ═══ */
-.tone-switch{display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-bottom:12px;cursor:pointer;user-select:none;}
-.tone-switch-label{font-size:10px;color:var(--ink-4);font-weight:500;}
-.tone-chip{font-size:10px;padding:3px 10px;border-radius:12px;font-weight:600;background:var(--surface-3);color:var(--ink-4);transition:all 0.2s;}
-.tone-chip--active{box-shadow:var(--shadow-sm);}
+/* ═══ Dark Mode Switch ═══ */
+.dm-switch{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;border:1px solid var(--surface-3);background:var(--surface-2);cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.dm-switch:hover{border-color:var(--ink-5);background:var(--surface-3);}
+.dm-label{font-size:10px;font-weight:600;color:var(--ink-3);}
 
 /* ═══ Nav ═══ */
-.nav{background:var(--surface);border-bottom:1px solid var(--surface-3);position:sticky;top:0;z-index:50;}
+.nav{background:var(--surface);border-bottom:1px solid var(--surface-3);position:sticky;top:0;z-index:50;transition:background 0.3s,border-color 0.3s;}
 .nav-inner{display:flex;gap:0;}
 .nav-btn{flex:1;padding:11px 0;border:none;background:transparent;font-family:var(--font);font-size:12px;font-weight:500;color:var(--ink-4);cursor:pointer;border-bottom:2px solid transparent;transition:color 0.2s;}
 .nav-btn:hover{color:var(--ink-2);}
@@ -632,35 +620,33 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 .fade-in{animation:fadeIn 0.3s ease forwards;}
 
 /* ═══ Insight Card ═══ */
-.insight-card{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow-sm);}
+.insight-card{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow-sm);transition:background 0.3s,border-color 0.3s;}
 .insight-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .insight-icon{width:20px;height:20px;border-radius:6px;background:var(--amber-light);color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
 .insight-title{font-size:12px;font-weight:700;color:var(--ink-2);}
 .insight-body{font-size:13px;color:var(--ink-2);line-height:1.7;}
 @media(min-width:768px){.insight-card{padding:20px 24px;margin-bottom:24px;}.insight-body{font-size:14px;}}
 
-/* ═══ Goal Cards ═══ */
+/* ═══ Goal Cards (円形バッジ廃止) ═══ */
 .goal-list{display:flex;flex-direction:column;gap:10px;}
-.g-card{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow-sm);transition:box-shadow 0.2s;}
+.g-card{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow-sm);transition:box-shadow 0.2s,background 0.3s,border-color 0.3s;}
 .g-card:hover{box-shadow:var(--shadow-md);}
 .g-card--warn{border-left:3px solid var(--amber);}
-.g-top{display:flex;align-items:flex-start;gap:14px;}
-.g-info{flex:1;min-width:0;}
+.g-info{min-width:0;}
 .g-title{font-size:13px;font-weight:600;color:var(--ink);line-height:1.5;margin-bottom:4px;}
 .g-alert{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--amber);font-weight:600;margin-bottom:4px;}
 .g-meta{font-size:11px;color:var(--ink-3);display:flex;align-items:center;flex-wrap:wrap;}
 .g-meta-sep{margin:0 4px;color:var(--ink-5);}
-.g-progress-circle{width:44px;height:44px;border-radius:50%;border:2.5px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
-.g-progress-num{font-size:15px;font-weight:900;line-height:1;}
-.g-progress-unit{font-size:8px;color:var(--ink-4);font-weight:500;}
 
-/* ═══ Dual Progress Bar ═══ */
-.dual-bar{margin:10px 0;display:flex;flex-direction:column;gap:4px;}
-.dual-bar-row{display:flex;align-items:center;gap:6px;}
-.dual-bar-label{font-size:9px;color:var(--ink-4);font-weight:600;width:24px;text-align:right;flex-shrink:0;}
-.dual-bar-track{flex:1;height:4px;background:var(--surface-3);border-radius:2px;overflow:hidden;}
-.dual-bar-fill{height:100%;border-radius:2px;transition:width 0.6s ease;}
-.dual-bar-pct{font-size:9px;font-weight:700;width:28px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums;}
+/* ═══ Progress Row（1本バー + 残日数） ═══ */
+.progress-row{margin:10px 0;display:flex;align-items:center;gap:10px;}
+.progress-bar-wrap{flex:1;display:flex;align-items:center;gap:6px;min-width:0;}
+.progress-track{flex:1;height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;transition:width 0.6s ease;}
+.progress-pct{font-size:11px;font-weight:800;width:32px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums;}
+.progress-days{font-size:10px;font-weight:600;color:var(--ink-3);white-space:nowrap;flex-shrink:0;font-variant-numeric:tabular-nums;}
+.progress-days--overdue{color:var(--red);animation:overduePulse 2s ease-in-out infinite;}
+@keyframes overduePulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
 
 .g-actions{display:flex;gap:6px;}
 .g-btn{padding:7px 12px;border-radius:8px;border:1px solid var(--surface-3);background:var(--surface);color:var(--ink-2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:4px;transition:all 0.15s;white-space:nowrap;}
@@ -671,7 +657,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 @media(min-width:768px){.g-card{padding:20px 24px;}.g-title{font-size:14px;}.g-btn{font-size:12px;padding:8px 14px;}}
 
 /* ═══ Member Cards ═══ */
-.m-card{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+.m-card{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:10px;box-shadow:var(--shadow-sm);transition:background 0.3s,border-color 0.3s;}
 .m-card--warn{border-left:3px solid var(--amber);}
 .m-head{padding:14px 18px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.15s;}
 .m-head:hover{background:var(--surface-2);}
@@ -690,21 +676,21 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 
 /* ═══ Summary Grid ═══ */
 .sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
-.sum-card{background:var(--surface);border:1px solid var(--surface-3);border-top:3px solid;border-radius:var(--radius);padding:12px 8px;text-align:center;box-shadow:var(--shadow-sm);}
+.sum-card{background:var(--surface);border:1px solid var(--surface-3);border-top:3px solid;border-radius:var(--radius);padding:12px 8px;text-align:center;box-shadow:var(--shadow-sm);transition:background 0.3s,border-color 0.3s;}
 .sum-label{font-size:9px;color:var(--ink-3);font-weight:600;margin-bottom:4px;}
 .sum-value{font-size:22px;font-weight:900;line-height:1;}
 @media(min-width:768px){.sum-grid{gap:12px;margin-bottom:24px;}.sum-label{font-size:10px;}.sum-value{font-size:28px;}}
 
 /* ═══ Tree ═══ */
 .tree-legend{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px;}
-.legend-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-3);font-weight:500;padding:4px 10px;border-radius:20px;background:var(--surface);border:1px solid var(--surface-3);}
+.legend-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-3);font-weight:500;padding:4px 10px;border-radius:20px;background:var(--surface);border:1px solid var(--surface-3);transition:background 0.3s,border-color 0.3s;}
 .legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.tree-root{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:16px;box-shadow:var(--shadow-sm);}
+.tree-root{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:16px;box-shadow:var(--shadow-sm);transition:background 0.3s,border-color 0.3s;}
 .tree-root-inner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .t-tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;letter-spacing:0.3px;}
 .tree-root-title{font-size:14px;font-weight:800;color:var(--ink);}
 .tree-root-sub{font-size:11px;color:var(--ink-4);margin-left:auto;}
-.tree-container{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:14px;box-shadow:var(--shadow-sm);}
+.tree-container{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:14px;box-shadow:var(--shadow-sm);transition:background 0.3s,border-color 0.3s;}
 .tr-node{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;border-left:2px solid transparent;margin-bottom:2px;}
 .tr-node--parent{cursor:pointer;}
 .tr-node--parent:hover{background:var(--surface-2);}
@@ -720,7 +706,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 
 /* ═══ Path Modal ═══ */
 .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;}
-.modal{background:var(--surface);border-radius:16px;padding:24px;max-width:460px;width:100%;box-shadow:var(--shadow-lg);animation:fadeIn 0.25s ease;}
+.modal{background:var(--surface);border-radius:16px;padding:24px;max-width:460px;width:100%;box-shadow:var(--shadow-lg);animation:fadeIn 0.25s ease;transition:background 0.3s;}
 .modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
 .modal-title{font-size:16px;font-weight:800;color:var(--ink);}
 .modal-sub{font-size:11px;color:var(--ink-4);margin-top:2px;}
@@ -731,13 +717,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 .path-rail{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0;}
 .path-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:10px;}
 .path-line{flex:1;width:1.5px;background:var(--surface-3);margin:3px 0;}
-.path-body{flex:1;padding:8px 14px;margin-left:8px;margin-bottom:8px;border-radius:8px;background:var(--surface-2);border:1px solid var(--surface-3);}
+.path-body{flex:1;padding:8px 14px;margin-left:8px;margin-bottom:8px;border-radius:8px;background:var(--surface-2);border:1px solid var(--surface-3);transition:background 0.3s,border-color 0.3s;}
 .path-body--leaf{background:var(--green-light);border-color:var(--green-muted);}
 .path-label{font-size:9px;font-weight:700;display:block;margin-bottom:2px;}
 .path-text{font-size:13px;color:var(--ink);font-weight:500;line-height:1.5;}
 .path-body--leaf .path-text{color:var(--green);font-weight:700;}
 
-/* ═══ LINE Phone Mockup ═══ */
+/* ═══ LINE Phone Mockup（常にライトテーマ） ═══ */
 .phone-wrap{display:flex;justify-content:center;padding:10px 0;}
 .phone-frame{width:320px;background:#8FBCBB;border-radius:40px;border:5px solid #1a1a1a;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.25),0 4px 12px rgba(0,0,0,0.12);position:relative;}
 @media(min-width:768px){.phone-frame{width:360px;}}
@@ -769,32 +755,31 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 
 .line-section-label{text-align:center;font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:8px;}
 
-/* LINE Bubble Content */
+/* LINE Bubble Content（常にライト色） */
 .lb-head{font-weight:700;font-size:14px;color:#1a1a1a;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eee;}
 .lb-greet{font-size:12px;color:#888;margin-bottom:10px;}
-.lb-item{padding:8px 10px;background:#f8f8f6;border-radius:8px;margin-bottom:6px;border-left:3px solid var(--green);}
-.lb-item--warn{border-left-color:var(--amber);background:#fef9ee;}
+.lb-item{padding:8px 10px;background:#f8f8f6;border-radius:8px;margin-bottom:6px;border-left:3px solid #1a7a42;}
+.lb-item--warn{border-left-color:#b8860b;background:#fef9ee;}
 .lb-item-title{font-size:12px;font-weight:500;color:#1a1a1a;}
 .lb-item-meta{font-size:10px;color:#999;margin-top:3px;}
-.lb-item-alert{color:var(--amber);font-weight:600;}
+.lb-item-alert{color:#b8860b;font-weight:600;}
 .lb-more{font-size:10px;color:#bbb;text-align:center;margin:8px 0;}
-.lb-suggest{background:#f8f6ff;border-radius:8px;padding:10px;margin-bottom:10px;border-left:3px solid var(--purple);}
-.lb-suggest-label{font-size:10px;color:var(--purple);font-weight:700;margin-bottom:2px;}
+.lb-suggest{background:#f8f6ff;border-radius:8px;padding:10px;margin-bottom:10px;border-left:3px solid #6b5ec4;}
+.lb-suggest-label{font-size:10px;color:#6b5ec4;font-weight:700;margin-bottom:2px;}
 .lb-suggest-text{font-size:11px;color:#555;line-height:1.5;}
 .lb-btns{display:flex;gap:5px;}
 .lb-btn{flex:1;text-align:center;padding:8px 0;border-radius:8px;background:#f0f0ee;color:#666;font-size:11px;font-weight:600;}
 .lb-btn--primary{background:#4a7048;color:#fff;}
 
 /* LINE Member Summary Row */
-.lb-member-row{padding:6px 8px;background:#f8f8f6;border-radius:6px;margin-bottom:4px;border-left:3px solid var(--green);}
-.lb-member-row--warn{border-left-color:var(--amber);background:#fef9ee;}
+.lb-member-row{padding:6px 8px;background:#f8f8f6;border-radius:6px;margin-bottom:4px;border-left:3px solid #1a7a42;}
+.lb-member-row--warn{border-left-color:#b8860b;background:#fef9ee;}
 .lb-member-name{font-size:11px;font-weight:700;color:#1a1a1a;}
 .lb-member-stats{display:flex;align-items:center;gap:8px;font-size:10px;color:#999;margin-top:2px;}
-.lb-member-progress{color:var(--ink-3);}
-.lb-member-alert{color:var(--amber);font-weight:600;}
-.lb-member-ok{color:var(--green);font-weight:600;}
+.lb-member-alert{color:#b8860b;font-weight:600;}
+.lb-member-ok{color:#1a7a42;font-weight:600;}
 .lb-member-detail{margin-top:3px;padding-left:4px;}
-.lb-member-issue{font-size:9px;color:var(--amber);line-height:1.5;}
+.lb-member-issue{font-size:9px;color:#b8860b;line-height:1.5;}
 </style>
 </body>
 </html>
