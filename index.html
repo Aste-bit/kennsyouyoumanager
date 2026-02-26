@@ -190,11 +190,11 @@ const TREE_DATA={id:"root",title:"コーポレート部の健全性担保",owner
 ]};
 
 const LEVEL_META=[
-  {label:"ルート",tag:"ROOT",color:"var(--green)"},
-  {label:"大目標",tag:"L1",color:"var(--blue)"},
-  {label:"中間目標",tag:"L2",color:"var(--amber)"},
-  {label:"フォーカスゴール",tag:"L3",color:"var(--green)"},
+  {label:"大目標",tag:"L1",color:"var(--blue)",bg:"var(--blue-light)"},
+  {label:"中間目標",tag:"L2",color:"var(--amber)",bg:"var(--amber-light)"},
+  {label:"フォーカスゴール",tag:"L3",color:"var(--green)",bg:"var(--green-light)"},
 ];
+function getLevelMeta(depth){if(depth<LEVEL_META.length)return LEVEL_META[depth];return{label:"中間目標",tag:"L"+(depth+1),color:"var(--amber)",bg:"var(--amber-light)"};}
 
 const Icon={
   chevron:p=><svg width="12" height="12" viewBox="0 0 12 12" fill="none" {...p}><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
@@ -220,16 +220,17 @@ function CircleProgress({value,size=44,stroke=2.5,color}){
 
 function PathPopup({show,goal,onClose}){
   if(!show||!goal)return null;const p=goal.path||[];
-  const levels=[{label:"L1 大目標",color:"var(--blue)",bg:"var(--blue-light)"},{label:"L2 中間目標",color:"var(--amber)",bg:"var(--amber-light)"}];
+  const leafDepth=p.length+1;
+  const leafMeta={label:"フォーカスゴール",tag:"L"+leafDepth,color:"var(--green)"};
   return(<div className="overlay" onClick={onClose}><div className="modal" onClick={e=>e.stopPropagation()}>
     <div className="modal-head"><div><div className="modal-title">ゴールパス</div><div className="modal-sub">上位ゴールからフォーカスゴールまでの経路</div></div><button className="modal-close" onClick={onClose}><Icon.close/></button></div>
     <div className="path-list">
-      {p.map((step,i)=>(
-        <div key={i} className="path-item"><div className="path-rail"><div className="path-dot" style={{background:levels[i]?.color||'var(--amber)'}}/><div className="path-line"/></div>
-          <div className="path-body"><span className="path-label" style={{color:levels[i]?.color||'var(--amber)'}}>{levels[i]?.label||'L2'}</span><span className="path-text">{step}</span></div></div>
-      ))}
-      <div className="path-item"><div className="path-rail"><div className="path-dot" style={{background:'var(--green)'}}/></div>
-        <div className="path-body path-body--leaf"><span className="path-label" style={{color:'var(--green)'}}>L3 フォーカスゴール</span><span className="path-text">{goal.title}</span></div></div>
+      {p.map((step,i)=>{const lv=getLevelMeta(i);return(
+        <div key={i} className="path-item"><div className="path-rail"><div className="path-dot" style={{background:lv.color}}/><div className="path-line"/></div>
+          <div className="path-body"><span className="path-label" style={{color:lv.color}}>{lv.tag}</span><span className="path-text">{step}</span></div></div>
+      );})}
+      <div className="path-item"><div className="path-rail"><div className="path-dot" style={{background:leafMeta.color}}/></div>
+        <div className="path-body path-body--leaf"><span className="path-label" style={{color:leafMeta.color}}>{leafMeta.tag} {leafMeta.label}</span><span className="path-text">{goal.title}</span></div></div>
     </div>
   </div></div>);
 }
@@ -286,7 +287,7 @@ function TreeNode({node,depth=0,isLast=false}){
   const isLeaf=node.isLeaf||!hasKids;
   const isWarn=node.status==="warning";
   const leafCount=hasKids?countLeaves(node):0;
-  const meta=LEVEL_META[isLeaf?3:Math.min(depth,2)];
+  const meta=isLeaf?{label:"フォーカスゴール",tag:"L"+(depth+1),color:"var(--green)",bg:"var(--green-light)"}:getLevelMeta(depth);
   return(
     <div className="t-item">
       <div className="t-rail">
@@ -296,7 +297,7 @@ function TreeNode({node,depth=0,isLast=false}){
       <div className="t-body">
         <div className={"t-card"+(hasKids?" t-card--parent":"")+(isLeaf?" t-card--leaf":"")+(isWarn?" t-card--warn":"")} onClick={hasKids?()=>setOpen(!open):undefined}>
           <div className="t-card-top">
-            <span className="t-tag" style={{background:isWarn?'var(--amber-light)':depth===1?'var(--blue-light)':depth===2?'var(--amber-light)':'var(--green-light)',color:isWarn?'var(--amber)':meta.color}}>{meta.tag}</span>
+            <span className="t-tag" style={{background:isWarn?'var(--amber-light)':meta.bg,color:isWarn?'var(--amber)':meta.color}}>{meta.tag}</span>
             <span className="t-title">{node.title}</span>
             <div className="t-card-right">
               {isLeaf&&node.deadline&&(()=>{const r=calcRemainingDays(node.deadline);return r!==null?<span className="t-days" style={{color:r<0?'var(--red)':r<7?'var(--amber)':'var(--ink-3)'}}>{r<0?`${Math.abs(r)}日超過`:`残${r}日`}</span>:null;})()}
@@ -417,7 +418,7 @@ function App(){
 
       {tab==="tree"&&(<div className="page fade-in">
         <div className="tree-legend">{LEVEL_META.map((m,i)=>(<span key={i} className="legend-chip"><span className="legend-dot" style={{background:m.color}}/>{m.tag}</span>))}<span className="legend-chip"><span className="legend-dot" style={{background:'var(--amber)'}}/>注意</span></div>
-        <div className="tree-root"><div className="tree-root-inner"><span className="t-tag" style={{background:'var(--blue-light)',color:'var(--blue)'}}>ROOT</span><span className="tree-root-title">{TREE_DATA.title}</span><span className="tree-root-sub">{TREE_DATA.owner} → フォーカス{countLeaves(TREE_DATA)}件</span></div></div>
+        <div className="tree-root"><div className="tree-root-inner"><span className="t-tag" style={{background:'var(--blue-light)',color:'var(--blue)'}}>L1</span><span className="tree-root-title">{TREE_DATA.title}</span><span className="tree-root-sub">{TREE_DATA.owner} → フォーカス{countLeaves(TREE_DATA)}件</span></div></div>
         <div className="tree-container">{TREE_DATA.children.map((c,i)=><TreeNode key={c.id} node={c} depth={1} isLast={i===TREE_DATA.children.length-1}/>)}</div>
       </div>)}
 
