@@ -4,40 +4,49 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<title>フォーカスゴール — 三上大慈</title>
+<title>Focus Goals — 三上大慈</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;0,8..60,800;1,8..60,300;1,8..60,400&family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --ink:#1a1a1a;--ink-2:#4a4a4a;--ink-3:#7a7a7a;--ink-4:#a0a0a0;--ink-5:#c8c8c8;
-  --surface:#ffffff;--surface-2:#f7f7f5;--surface-3:#efeeeb;
-  --green:#1a7a42;--green-light:#e8f5ec;--green-muted:#b5dfc4;
+  --ink:#2a2418;--ink-2:#4a4038;--ink-3:#8a7e6c;--ink-4:#b8ae9a;--ink-5:#d8d0c0;
+  --surface:#faf8f4;--surface-2:#f4f1ea;--surface-3:#e8e2d6;
+  --card:#ffffff;--stripe:#f8f5ee;
+  --accent:#c45522;--accent-light:#fef0e8;--accent-muted:#e8a880;
+  --green:#3a8a48;--green-light:#eef7f0;--green-muted:#b8dcc0;
   --amber:#b8860b;--amber-light:#fdf6e8;--amber-muted:#f0dfa0;
-  --red:#c44;--red-light:#fef0f0;
+  --red:#c44040;--red-light:#fef0f0;
   --purple:#6b5ec4;--purple-light:#f0edf8;
   --blue:#2563eb;--blue-light:#eff4ff;
-  --radius:10px;--radius-lg:14px;
-  --font:'Zen Kaku Gothic New','Noto Sans JP',sans-serif;
-  --shadow-sm:0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md:0 4px 12px rgba(0,0,0,0.06),0 2px 4px rgba(0,0,0,0.04);
-  --shadow-lg:0 12px 32px rgba(0,0,0,0.08),0 4px 8px rgba(0,0,0,0.04);
+  --radius:8px;--radius-lg:12px;
+  --font-serif:'Source Serif 4','Noto Sans JP',Georgia,serif;
+  --font-sans:'DM Sans','Noto Sans JP',sans-serif;
+  --shadow-sm:0 1px 3px rgba(42,36,24,0.04);
+  --shadow-md:0 4px 12px rgba(42,36,24,0.07);
+  --shadow-lg:0 12px 32px rgba(42,36,24,0.1);
+  --border-thick:2px solid var(--ink);
+  --border-thin:1px solid var(--surface-3);
 }
 [data-theme="dark"]{
-  --ink:#e8e8e8;--ink-2:#c0c0c0;--ink-3:#909090;--ink-4:#686868;--ink-5:#404040;
-  --surface:#1a1a1e;--surface-2:#222226;--surface-3:#2e2e33;
-  --green:#3dbd6e;--green-light:#1a2e22;--green-muted:#1e4430;
+  --ink:#e8e4d8;--ink-2:#c8c0b0;--ink-3:#a09880;--ink-4:#706850;--ink-5:#484030;
+  --surface:#1c1b17;--surface-2:#242320;--surface-3:#3a3930;
+  --card:#2a2924;--stripe:#2e2c24;
+  --accent:#e87840;--accent-light:#3a2418;--accent-muted:#6a3820;
+  --green:#6ab870;--green-light:#1a2e1c;--green-muted:#2a4a2e;
   --amber:#e0a620;--amber-light:#2e2818;--amber-muted:#4a3d10;
   --red:#ef6b6b;--red-light:#2e1a1a;
   --purple:#9b8ee8;--purple-light:#252040;
   --blue:#5b8def;--blue-light:#1a2440;
-  --shadow-sm:0 1px 3px rgba(0,0,0,0.2),0 1px 2px rgba(0,0,0,0.15);
-  --shadow-md:0 4px 12px rgba(0,0,0,0.25),0 2px 4px rgba(0,0,0,0.15);
-  --shadow-lg:0 12px 32px rgba(0,0,0,0.35),0 4px 8px rgba(0,0,0,0.2);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.25);
+  --shadow-lg:0 12px 32px rgba(0,0,0,0.35);
+  --border-thick:2px solid var(--ink);
+  --border-thin:1px solid var(--surface-3);
 }
-body{font-family:var(--font);background:var(--surface-2);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.6;transition:background 0.3s,color 0.3s;}
-.container{max-width:880px;margin:0 auto;padding:0 16px;}
-@media(min-width:768px){.container{padding:0 32px;}}
+body{font-family:var(--font-serif);background:var(--surface);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.6;transition:background 0.4s,color 0.4s;}
+.container{max-width:860px;margin:0 auto;padding:0 20px;}
+@media(min-width:768px){.container{padding:0 36px;}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -46,51 +55,30 @@ body{font-family:var(--font);background:var(--surface-2);color:var(--ink);min-he
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState,useEffect,useCallback,useMemo} = React;
+const {useState,useEffect,useCallback,useMemo}=React;
 
-/* ═══ アラート文言（やわらかトーン固定） ═══ */
-const ALERT_TEXT = {
-  stale: "30日以上更新がありません",
-  granularity: "もう少し具体的にできるかも",
-  overdue: "期限を過ぎています",
-  pace: "ペースが少しゆっくりです",
-  noGoal: "ゴールが未設定です",
-};
-function getAlertText(alertKey) {
-  return ALERT_TEXT[alertKey] || alertKey || '';
-}
-function getStaleText(setDate) {
-  const days = calcElapsedDays(setDate);
-  return `${days}日間更新がありません`;
-}
-function getAlertTextDynamic(alertKey, setDate) {
-  if (alertKey === 'stale' && setDate) return getStaleText(setDate);
-  return getAlertText(alertKey);
-}
-
-/* ═══ 基準日（動的） ═══ */
-const TODAY = new Date();
-TODAY.setHours(0,0,0,0);
-const TODAY_STR = `${TODAY.getFullYear()}.${String(TODAY.getMonth()+1).padStart(2,'0')}.${String(TODAY.getDate()).padStart(2,'0')}`;
-const WEEKDAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const TODAY_DISPLAY = `${TODAY_STR} ${WEEKDAYS[TODAY.getDay()]}`;
-const TODAY_JP = `${TODAY.getFullYear()}年${TODAY.getMonth()+1}月${TODAY.getDate()}日（${'日月火水木金土'[TODAY.getDay()]}）`;
-
-/* ═══ ユーティリティ（統一ロジック） ═══ */
+const ALERT_TEXT={stale:"30日以上更新がありません",granularity:"もう少し具体的にできるかも",overdue:"期限を過ぎています",pace:"ペースが少しゆっくりです",noGoal:"ゴールが未設定です"};
+function getAlertText(k){return ALERT_TEXT[k]||k||'';}
 function calcElapsedDays(d){return d?Math.ceil((TODAY-new Date(d))/86400000):0;}
+function getStaleText(d){return`${calcElapsedDays(d)}日間更新がありません`;}
+function getAlertTextDynamic(k,d){if(k==='stale'&&d)return getStaleText(d);return getAlertText(k);}
+
+const TODAY=new Date();TODAY.setHours(0,0,0,0);
+const TODAY_STR=`${TODAY.getFullYear()}.${String(TODAY.getMonth()+1).padStart(2,'0')}.${String(TODAY.getDate()).padStart(2,'0')}`;
+const WEEKDAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const TODAY_DISPLAY=`${TODAY_STR} ${WEEKDAYS[TODAY.getDay()]}`;
+const TODAY_JP=`${TODAY.getFullYear()}年${TODAY.getMonth()+1}月${TODAY.getDate()}日（${'日月火水木金土'[TODAY.getDay()]}）`;
 function calcRemainingDays(d){return d?Math.ceil((new Date(d)-TODAY)/86400000):null;}
 function formatShortDate(d){return d?d.slice(5).replace('-','/'):'';}
 
-
-/* ═══ 三上大慈 自身のゴール ═══ */
-const MY_GOALS = [
+const MY_GOALS=[
   {id:1,title:"【緊急】コスト削減施策をきっちりと回し切る",setDate:"2026-01-22",deadline:"2026-03-15",progress:55,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る"]},
   {id:2,title:"ガバナンスの運用",setDate:"2026-01-31",deadline:"2026-03-31",progress:40,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","ガバナンスの運用"]},
-  {id:3,title:"チームの全員のゴールの健全性を担保する",setDate:"2026-02-11",deadline:"2026-03-31",progress:30,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","チームマネジメント","全員のゴール健全性担保"]},
-  {id:4,title:"支払調書の作成と配布",setDate:"2026-01-14",deadline:"2026-02-10",progress:10,status:"warning",alertKey:"stale",path:["コーポレート部の健全性担保","財務基盤の最適化","経理・税務対応","支払調書の作成と配布"]},
+  {id:3,title:"チームの全員のゴールの健全性を担保する",setDate:"2026-02-11",deadline:"2026-03-31",progress:30,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","チームマネジメント"]},
+  {id:4,title:"支払調書の作成と配布",setDate:"2026-01-14",deadline:"2026-02-10",progress:10,status:"warning",alertKey:"stale",path:["コーポレート部の健全性担保","財務基盤の最適化","経理・税務対応"]},
   {id:5,title:"報酬金額管理シートの運用",setDate:"2026-01-26",deadline:"2026-03-15",progress:50,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","報酬管理"]},
-  {id:6,title:"クレカ切り替え",setDate:"2026-01-26",deadline:"2026-02-28",progress:70,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る","クレカ切り替え"]},
-  {id:7,title:"使うのやめるツールの検討",setDate:"2026-01-31",deadline:"2026-03-10",progress:45,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る","ツール検討"]},
+  {id:6,title:"クレカ切り替え",setDate:"2026-01-26",deadline:"2026-02-28",progress:70,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減"]},
+  {id:7,title:"使うのやめるツールの検討",setDate:"2026-01-31",deadline:"2026-03-10",progress:45,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減"]},
   {id:8,title:"台さんに資料共有",setDate:"2026-02-15",deadline:"2026-03-01",progress:20,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤"]},
   {id:9,title:"株主名簿の作成",setDate:"2026-02-16",deadline:"2026-03-15",progress:25,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
   {id:10,title:"高知裁判進める",setDate:"2026-02-15",deadline:"2026-04-30",progress:15,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
@@ -103,23 +91,22 @@ const MY_GOALS = [
   {id:17,title:"事業内容がわかる書類の作成",setDate:"2026-01-29",deadline:"2026-03-10",progress:40,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
   {id:18,title:"日本リスキリング支援の口座開設",setDate:"2026-01-29",deadline:"2026-02-28",progress:60,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","口座管理"]},
   {id:19,title:"郵便局で開設手続き",setDate:"2026-02-16",deadline:"2026-03-05",progress:30,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","口座管理"]},
-  {id:20,title:"各アカウントの決済変更",setDate:"2026-01-31",deadline:"2026-03-10",progress:35,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る"]},
+  {id:20,title:"各アカウントの決済変更",setDate:"2026-01-31",deadline:"2026-03-10",progress:35,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減"]},
   {id:21,title:"運用方針の策定",setDate:"2026-01-26",deadline:"2026-03-15",progress:50,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","ガバナンスの運用"]},
   {id:22,title:"運用担当者決める→割り振る",setDate:"2026-01-26",deadline:"2026-03-01",progress:40,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","ガバナンスの運用"]},
 ];
 
-/* ═══ 直下メンバー ═══ */
-const MEMBERS = {
+const MEMBERS={
   "五十嵐壮太郎":{goals:[
-    {id:101,title:"メモを作り提出",setDate:"2026-01-10",deadline:"2026-02-10",progress:10,status:"warning",alertKey:"stale",path:["コーポレート運営","顧客対応品質向上","メモを作り提出"]},
-    {id:102,title:"出来ないことを洗い出す",setDate:"2026-01-10",deadline:"2026-02-10",progress:5,status:"warning",alertKey:"stale",path:["コーポレート運営","顧客対応品質向上","スキル棚卸"]},
-    {id:103,title:"揉めてる顧客案件の営業の録画チェック",setDate:"2026-01-14",deadline:"2026-02-15",progress:0,status:"warning",alertKey:"stale",path:["コーポレート運営","顧客対応品質向上","営業録画チェック"]},
+    {id:101,title:"メモを作り提出",setDate:"2026-01-10",deadline:"2026-02-10",progress:10,status:"warning",alertKey:"stale",path:["コーポレート運営","顧客対応品質向上"]},
+    {id:102,title:"出来ないことを洗い出す",setDate:"2026-01-10",deadline:"2026-02-10",progress:5,status:"warning",alertKey:"stale",path:["コーポレート運営","顧客対応品質向上"]},
+    {id:103,title:"揉めてる顧客案件の営業の録画チェック",setDate:"2026-01-14",deadline:"2026-02-15",progress:0,status:"warning",alertKey:"stale",path:["コーポレート運営","顧客対応品質向上"]},
     {id:104,title:"中途解約確定報告者手続き",setDate:"2026-02-01",deadline:"2026-03-15",progress:40,status:"on_track",alertKey:"",path:["コーポレート運営","解約管理"]},
   ]},
   "井上津留美":{goals:[
-    {id:201,title:"Freeeの契約",setDate:"2026-02-01",deadline:"2026-03-01",progress:60,status:"on_track",alertKey:"",path:["コーポレート運営","経理基盤","Freee契約"]},
+    {id:201,title:"Freeeの契約",setDate:"2026-02-01",deadline:"2026-03-01",progress:60,status:"on_track",alertKey:"",path:["コーポレート運営","経理基盤"]},
     {id:202,title:"債権管理台帳更新",setDate:"2026-02-01",deadline:"2026-03-10",progress:45,status:"on_track",alertKey:"",path:["コーポレート運営","経理基盤"]},
-    {id:203,title:"承認率入力",setDate:"2026-02-01",deadline:"2026-03-15",progress:20,status:"warning",alertKey:"granularity",path:["コーポレート運営","経理基盤","承認率入力"]},
+    {id:203,title:"承認率入力",setDate:"2026-02-01",deadline:"2026-03-15",progress:20,status:"warning",alertKey:"granularity",path:["コーポレート運営","経理基盤"]},
     {id:204,title:"CBS引継ぎ完了",setDate:"2026-02-01",deadline:"2026-03-01",progress:55,status:"on_track",alertKey:"",path:["コーポレート運営","経理基盤"]},
   ]},
   "伊藤正":{goals:[
@@ -129,7 +116,7 @@ const MEMBERS = {
     {id:304,title:"報告数値が上がってくる体制を整える",setDate:"2026-01-20",deadline:"2026-03-15",progress:25,status:"on_track",alertKey:"",path:["コーポレート運営","コンプライアンス"]},
   ]},
   "台信朗":{goals:[
-    {id:401,title:"手続き進める",setDate:"2026-02-01",deadline:"2026-03-15",progress:15,status:"warning",alertKey:"granularity",path:["台信朗のゴール","手続き進める"]},
+    {id:401,title:"手続き進める",setDate:"2026-02-01",deadline:"2026-03-15",progress:15,status:"warning",alertKey:"granularity",path:["台信朗のゴール"]},
     {id:402,title:"ミレニア新宿御苑賃賃契約解除",setDate:"2026-02-01",deadline:"2026-03-01",progress:50,status:"on_track",alertKey:"",path:["コーポレート運営","総務"]},
   ]},
   "星野舜":{goals:[
@@ -158,13 +145,12 @@ const MEMBERS = {
   ]},
   "貴志祐介":{goals:[
     {id:901,title:"総務LINEさばく",setDate:"2026-02-01",deadline:"2026-03-31",progress:50,status:"on_track",alertKey:"",path:["コーポレート運営","総務"]},
-    {id:902,title:"【定常業務】",setDate:"2026-02-01",deadline:"2026-03-31",progress:30,status:"warning",alertKey:"granularity",path:["貴志祐介のゴール","定常業務"]},
+    {id:902,title:"【定常業務】",setDate:"2026-02-01",deadline:"2026-03-31",progress:30,status:"warning",alertKey:"granularity",path:["貴志祐介のゴール"]},
     {id:903,title:"契約書関連依頼対応",setDate:"2026-02-01",deadline:"2026-03-15",progress:45,status:"on_track",alertKey:"",path:["コーポレート運営","総務"]},
     {id:904,title:"FX口座開設",setDate:"2026-02-01",deadline:"2026-03-10",progress:20,status:"warning",alertKey:"granularity",path:["コーポレート運営","財務"]},
   ]},
 };
 
-/* ═══ ゴールツリー ═══ */
 const TREE_DATA={id:"root",title:"コーポレート部の健全性担保",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
   {id:"fin",title:"財務基盤の最適化",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
     {id:"cost",title:"コスト削減施策を回し切る",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
@@ -201,14 +187,8 @@ const TREE_DATA={id:"root",title:"コーポレート部の健全性担保",owner
   {id:"team",title:"チームマネジメント",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
     {id:"tm1",title:"全員のゴール健全性担保",owner:"三上大慈",isLeaf:true,status:"on_track",progress:30,children:[]},
   ]},
-  {id:"comp",title:"コンプライアンス",owner:"伊藤正",isLeaf:false,status:"on_track",children:[
-    {id:"i301",title:"ほっしーに定常業務依頼",owner:"伊藤正",isLeaf:true,status:"on_track",progress:50,children:[]},
-    {id:"i302",title:"特商法チェックオペ",owner:"伊藤正",isLeaf:true,status:"on_track",progress:35,children:[]},
-  ]},
 ]};
 
-
-/* ─── Icons ─── */
 const Icon={
   chevron:p=><svg width="12" height="12" viewBox="0 0 12 12" fill="none" {...p}><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   check:p=><svg width="14" height="14" viewBox="0 0 14 14" fill="none" {...p}><path d="M3 7.5L5.5 10L11 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
@@ -223,355 +203,110 @@ const Icon={
   help:p=><svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...p}><circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.3"/><path d="M6 6.2a2 2 0 013.5 1.3c0 1.3-2 1.3-2 2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/><circle cx="7.5" cy="12" r="0.7" fill="currentColor"/></svg>,
 };
 
-/* ─── 進捗バー + 残日数 ─── */
-function ProgressRow({deadline,progress,isWarn}){
-  const remaining=calcRemainingDays(deadline);
-  const isOverdue=remaining!==null&&remaining<0;
-  const overdueDays=isOverdue?Math.abs(remaining):0;
-  const progressPercent=Math.min(100,Math.max(0,progress||0));
-  return(
-    <div className="progress-row">
-      <div className="progress-bar-wrap">
-        <div className="progress-track">
-          <div className="progress-fill" style={{width:progressPercent+"%",background:isWarn?'var(--amber)':progressPercent>60?'var(--green)':'var(--blue)'}}/>
-        </div>
-        <span className="progress-pct" style={{color:isWarn?'var(--amber)':progressPercent>60?'var(--green)':'var(--blue)'}}>{progressPercent}%</span>
-      </div>
-      <span className={isOverdue?"progress-days progress-days--overdue":"progress-days"} style={{color:isOverdue?'var(--red)':remaining!==null&&remaining<7?'var(--amber)':'var(--ink-3)'}}>
-        {isOverdue?`${overdueDays}日超過`:remaining!==null?`残${remaining}日`:''}
-      </span>
-    </div>
-  );
+function CircleProgress({value,size=44,stroke=2.5,color}){
+  const r=(size-stroke*2)/2;const circ=2*Math.PI*r;const offset=circ-((value||0)/100)*circ;
+  return(<div style={{position:'relative',width:size,height:size,flexShrink:0}}>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}><circle cx={size/2} cy={size/2} r={r} fill="none" stroke="var(--surface-3)" strokeWidth={stroke}/><circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset} transform={`rotate(-90 ${size/2} ${size/2})`} style={{transition:'stroke-dashoffset 0.8s ease'}}/></svg>
+    <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:size>40?12:10,fontWeight:700,color:'var(--ink)',fontFamily:'var(--font-sans)'}}>{value}<span style={{fontSize:size>40?8:7,fontWeight:600,opacity:0.6}}>%</span></div>
+  </div>);
 }
 
-/* ─── パスポップアップ ─── */
 function PathPopup({show,goal,onClose}){
-  if(!show||!goal) return null;
-  const p=goal.path||[];
-  const levels=[{label:"最上位",color:"var(--blue)",bg:"var(--blue-light)"},{label:"中間",color:"var(--amber)",bg:"var(--amber-light)"},{label:"中間",color:"var(--amber)",bg:"var(--amber-light)"},{label:"中間",color:"var(--amber)",bg:"var(--amber-light)"}];
-  return(
-    <div className="overlay" onClick={onClose}>
-      <div className="modal" onClick={e=>e.stopPropagation()}>
-        <div className="modal-head">
-          <div><div className="modal-title">ゴールパス</div><div className="modal-sub">上位からフォーカスゴールまでの経路</div></div>
-          <button className="modal-close" onClick={onClose}><Icon.close/></button>
-        </div>
-        <div className="path-list">
-          {p.map((step,i)=>{
-            const isLast=i===p.length-1;
-            const lv=isLast?{label:"フォーカスゴール",color:"var(--green)",bg:"var(--green-light)"}:(levels[i]||levels[1]);
-            return(
-              <div key={i} className="path-item">
-                <div className="path-rail"><div className="path-dot" style={{background:lv.color}}/>{!isLast&&<div className="path-line"/>}</div>
-                <div className={"path-body"+(isLast?" path-body--leaf":"")}>
-                  <span className="path-label" style={{color:lv.color}}>{lv.label}</span>
-                  <span className="path-text">{step}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
+  if(!show||!goal)return null;const p=goal.path||[];
+  const levels=[{label:"最上位",color:"var(--blue)"},{label:"中間",color:"var(--amber)"},{label:"中間",color:"var(--amber)"},{label:"中間",color:"var(--amber)"}];
+  return(<div className="overlay" onClick={onClose}><div className="modal" onClick={e=>e.stopPropagation()}>
+    <div className="modal-head"><div><div className="modal-title">ゴールパス</div><div className="modal-sub">上位からフォーカスゴールまでの経路</div></div><button className="modal-close" onClick={onClose}><Icon.close/></button></div>
+    <div className="path-list">{p.map((step,i)=>{const isLast=i===p.length-1;const lv=isLast?{label:"フォーカスゴール",color:"var(--green)"}:(levels[i]||levels[1]);return(
+      <div key={i} className="path-item"><div className="path-rail"><div className="path-dot" style={{background:lv.color}}/>{!isLast&&<div className="path-line"/>}</div><div className={"path-body"+(isLast?" path-body--leaf":"")}><span className="path-label" style={{color:lv.color}}>{lv.label}</span><span className="path-text">{step}</span></div></div>);})}</div>
+  </div></div>);
 }
 
-/* ─── ゴールカード ─── */
-function GoalCard({goal,onConfirm,onPath,delay=0}){
-  const[vis,setVis]=useState(false);
-  useEffect(()=>{const t=setTimeout(()=>setVis(true),delay);return()=>clearTimeout(t);},[delay]);
-  const isWarn=goal.status==="warning"||goal.alertKey;
-  const alertText=getAlertTextDynamic(goal.alertKey, goal.setDate);
-  return(
-    <div className={"g-card"+(isWarn?" g-card--warn":"")} style={{opacity:vis?1:0,transform:vis?"translateY(0)":"translateY(8px)",transition:"opacity 0.4s ease, transform 0.4s ease"}}>
-      <div className="g-info">
-        <div className="g-title">{goal.title}</div>
-        {alertText&&<div className="g-alert"><Icon.alert style={{width:11,height:11}}/> {alertText}</div>}
-        <div className="g-meta">{formatShortDate(goal.setDate)} → {formatShortDate(goal.deadline)}</div>
-      </div>
-      <ProgressRow deadline={goal.deadline} progress={goal.progress} isWarn={isWarn}/>
-      <div className="g-actions">
-        <button className="g-btn g-btn--path" onClick={()=>onPath(goal)}><Icon.route/> パス照会</button>
-        {isWarn&&<button className={"g-btn g-btn--ack"+(goal.confirmed?" g-btn--acked":"")} onClick={()=>onConfirm(goal.id)}><Icon.check/> {goal.confirmed?"確認済み":"確認する"}</button>}
-        <button className="g-btn g-btn--detail">詳細 <Icon.external/></button>
-      </div>
+function GoalCard({goal,onConfirm,onPath,delay=0,index=0}){
+  const[vis,setVis]=useState(false);useEffect(()=>{const t=setTimeout(()=>setVis(true),delay);return()=>clearTimeout(t);},[delay]);
+  const isWarn=goal.status==="warning"||goal.alertKey;const alertText=getAlertTextDynamic(goal.alertKey,goal.setDate);
+  const remaining=calcRemainingDays(goal.deadline);const isOverdue=remaining!==null&&remaining<0;
+  const pColor=isWarn?'var(--amber)':goal.progress>60?'var(--green)':'var(--accent)';
+  return(<div className={"g-row"+(isWarn?" g-row--warn":"")+(index%2===0?"":" g-row--stripe")} style={{opacity:vis?1:0,transform:vis?"translateY(0)":"translateY(6px)",transition:"opacity 0.35s,transform 0.35s"}}>
+    <div className="g-num">{String(index+1).padStart(2,'0')}</div>
+    <div className="g-main"><div className="g-top"><div className="g-info"><div className="g-title">{goal.title}</div>{alertText&&<div className="g-alert"><Icon.alert style={{width:11,height:11}}/> {alertText}</div>}<div className="g-path">{goal.path.join(' › ')}</div></div>
+      <div className="g-stats"><CircleProgress value={goal.progress} size={42} stroke={2.5} color={pColor}/><div className="g-days" style={{color:isOverdue?'var(--red)':remaining!==null&&remaining<7?'var(--amber)':'var(--ink-3)'}}>{isOverdue?`${Math.abs(remaining)}日超過`:remaining!==null?`残${remaining}日`:''}</div></div></div>
+      <div className="g-actions"><button className="g-btn g-btn--path" onClick={()=>onPath(goal)}><Icon.route/> パス照会</button>{isWarn&&<button className={"g-btn g-btn--ack"+(goal.confirmed?" g-btn--acked":"")} onClick={()=>onConfirm(goal.id)}><Icon.check/> {goal.confirmed?"確認済み":"確認する"}</button>}<button className="g-btn g-btn--detail">詳細 <Icon.external/></button></div>
     </div>
-  );
+  </div>);
 }
 
-/* ─── メンバーカード ─── */
 function MemberCard({name,goals,onConfirm,onPath,delay=0}){
-  const[open,setOpen]=useState(false);
-  const[vis,setVis]=useState(false);
-  const[sortBy,setSortBy]=useState('deadline');
-  const[sortDir,setSortDir]=useState('asc');
+  const[open,setOpen]=useState(false);const[vis,setVis]=useState(false);
+  const[sortBy,setSortBy]=useState('deadline');const[sortDir,setSortDir]=useState('asc');
   useEffect(()=>{const t=setTimeout(()=>setVis(true),delay);return()=>clearTimeout(t);},[delay]);
-  const alerts=goals.filter(g=>g.alertKey).length;
-  const avgProgress=goals.length>0?Math.round(goals.reduce((s,g)=>s+(g.progress||0),0)/goals.length):0;
-  const toggleSort=field=>{if(sortBy===field){setSortDir(d=>d==='asc'?'desc':'asc');}else{setSortBy(field);setSortDir('asc');}};
-  const sortedGoals=useMemo(()=>{
-    const arr=[...goals];
-    arr.sort((a,b)=>{
-      let v;
-      if(sortBy==='deadline'){const ra=calcRemainingDays(a.deadline)??999,rb=calcRemainingDays(b.deadline)??999;v=ra-rb;}
-      else{v=(a.progress||0)-(b.progress||0);}
-      return sortDir==='asc'?v:-v;
-    });
-    return arr;
-  },[goals,sortBy,sortDir]);
-  return(
-    <div className={"m-card"+(alerts>0?" m-card--warn":"")} style={{opacity:vis?1:0,transform:vis?"translateY(0)":"translateY(8px)",transition:"opacity 0.4s ease, transform 0.4s ease"}}>
-      <div className="m-head" onClick={()=>setOpen(!open)}>
-        <div className="m-head-left">
-          <div className="m-avatar" style={{background:alerts>0?'var(--amber-light)':'var(--green-light)',color:alerts>0?'var(--amber)':'var(--green)'}}>{name[0]}</div>
-          <div>
-            <div className="m-name">{name}</div>
-            <div className="m-sub">フォーカスゴール {goals.length}件 ｜ 平均進捗 {avgProgress}%</div>
-          </div>
-        </div>
-        <div className="m-head-right">
-          {alerts>0&&<span className="m-alert-badge"><Icon.alert style={{width:10,height:10}}/> 注意{alerts}</span>}
-          {alerts===0&&<span className="m-ok-badge">✓ 順調</span>}
-          <span className={"m-arrow"+(open?" m-arrow--open":"")}><Icon.chevron/></span>
-        </div>
+  const alerts=goals.filter(g=>g.alertKey).length;const avgProgress=goals.length>0?Math.round(goals.reduce((s,g)=>s+(g.progress||0),0)/goals.length):0;
+  const toggleSort=f=>{if(sortBy===f)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortBy(f);setSortDir('asc');}};
+  const sortedGoals=useMemo(()=>{const a=[...goals];a.sort((x,y)=>{let v;if(sortBy==='deadline'){v=(calcRemainingDays(x.deadline)??999)-(calcRemainingDays(y.deadline)??999);}else{v=(x.progress||0)-(y.progress||0);}return sortDir==='asc'?v:-v;});return a;},[goals,sortBy,sortDir]);
+  const pColor=alerts>0?'var(--amber)':'var(--green)';
+  return(<div className={"m-card"+(alerts>0?" m-card--warn":"")} style={{opacity:vis?1:0,transform:vis?"translateY(0)":"translateY(6px)",transition:"opacity 0.4s,transform 0.4s"}}>
+    <div className="m-head" onClick={()=>setOpen(!open)}>
+      <div className="m-head-left">
+        <CircleProgress value={avgProgress} size={40} stroke={2.5} color={pColor}/>
+        <div><div className="m-name">{name}</div><div className="m-sub">ゴール {goals.length}件 ｜ 平均 {avgProgress}%</div></div>
       </div>
-      {open&&(
-        <div className="m-body">
-          <div className="sort-bar">
-            <button className={"sort-btn"+(sortBy==='deadline'?" sort-btn--active":"")} onClick={()=>toggleSort('deadline')}>
-              期限順 {sortBy==='deadline'&&(sortDir==='asc'?<Icon.sortAsc/>:<Icon.sortDesc/>)}
-            </button>
-            <button className={"sort-btn"+(sortBy==='progress'?" sort-btn--active":"")} onClick={()=>toggleSort('progress')}>
-              進捗順 {sortBy==='progress'&&(sortDir==='asc'?<Icon.sortAsc/>:<Icon.sortDesc/>)}
-            </button>
-          </div>
-          {sortedGoals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={onConfirm} onPath={onPath} delay={i*50}/>)}
-        </div>
-      )}
+      <div className="m-head-right">
+        {alerts>0?<span className="m-alert-badge"><Icon.alert style={{width:10,height:10}}/> 注意{alerts}</span>:<span className="m-ok-badge">✓ 順調</span>}
+        <span className={"m-arrow"+(open?" m-arrow--open":"")}><Icon.chevron/></span>
+      </div>
     </div>
-  );
+    {open&&<div className="m-body">
+      <div className="sort-bar" style={{padding:'10px 0 6px'}}><div className="section-label" style={{fontSize:9}}>ゴール一覧</div><div className="sort-buttons"><button className={"sort-btn"+(sortBy==='deadline'?" sort-btn--active":"")} onClick={()=>toggleSort('deadline')}>期限順 {sortBy==='deadline'&&(sortDir==='asc'?<Icon.sortAsc/>:<Icon.sortDesc/>)}</button><button className={"sort-btn"+(sortBy==='progress'?" sort-btn--active":"")} onClick={()=>toggleSort('progress')}>進捗順 {sortBy==='progress'&&(sortDir==='asc'?<Icon.sortAsc/>:<Icon.sortDesc/>)}</button></div></div>
+      {sortedGoals.map((g,i)=><GoalCard key={g.id} goal={g} index={i} onConfirm={onConfirm} onPath={onPath} delay={i*40}/>)}
+    </div>}
+  </div>);
 }
 
-/* ─── サマリーカード ─── */
 function SummaryGrid({items}){
-  return(
-    <div className="sum-grid">
-      {items.map((c,i)=>(
-        <div key={i} className="sum-card" style={{borderTopColor:c.accent}}>
-          <div className="sum-label">{c.label}</div>
-          <div className="sum-value" style={{color:c.accent}}>{c.value}</div>
-        </div>
-      ))}
-    </div>
-  );
+  return(<div className="sum-grid">{items.map((c,i)=>(<div key={i} className="sum-card" style={{borderTopColor:c.accent}}><div className="sum-value" style={{color:c.accent}}>{c.value}</div><div className="sum-label">{c.label}</div></div>))}</div>);
 }
 
-/* ─── ツリーノード ─── */
 function TreeNode({node,depth=0}){
-  const[open,setOpen]=useState(depth<2);
-  const hasKids=node.children&&node.children.length>0;
-  const isWarn=node.status==="warning";
-  const color=isWarn?'var(--amber)':'var(--green)';
-  return(
-    <div style={{marginLeft:depth>0?16:0}}>
-      <div className={"tr-node"+(hasKids?" tr-node--parent":"")+(node.isLeaf?" tr-node--leaf":"")} style={{borderLeftColor:depth>0?color:'transparent'}} onClick={hasKids?()=>setOpen(!open):undefined}>
-        {hasKids&&<span className={"tr-arrow"+(open?" tr-arrow--open":"")}><Icon.chevron/></span>}
-        {node.isLeaf&&<span className="tr-leaf-dot" style={{background:color}}/>}
-        <span className="tr-title" style={{fontWeight:node.isLeaf?400:600}}>{node.title}</span>
-        {node.isLeaf&&node.progress!==undefined&&<span className="tr-progress">{node.progress}%</span>}
-        {node.isLeaf&&<span className="tr-status" style={{color,background:isWarn?'var(--amber-light)':'var(--green-light)'}}>{isWarn?'!':'✓'}</span>}
-        <span className="tr-owner">{node.owner}</span>
-      </div>
-      {open&&hasKids&&node.children.map(ch=><TreeNode key={ch.id} node={ch} depth={depth+1}/>)}
+  const[open,setOpen]=useState(depth<2);const hasKids=node.children&&node.children.length>0;const isWarn=node.status==="warning";const color=isWarn?'var(--amber)':'var(--green)';
+  return(<div style={{marginLeft:depth>0?16:0}}>
+    <div className={"tr-node"+(hasKids?" tr-node--parent":"")+(node.isLeaf?" tr-node--leaf":"")} style={{borderLeftColor:depth>0?color:'transparent'}} onClick={hasKids?()=>setOpen(!open):undefined}>
+      {hasKids&&<span className={"tr-arrow"+(open?" tr-arrow--open":"")}><Icon.chevron/></span>}
+      {node.isLeaf&&<span className="tr-leaf-dot" style={{background:color}}/>}
+      <span className="tr-title" style={{fontWeight:node.isLeaf?400:600}}>{node.title}</span>
+      {node.isLeaf&&node.progress!==undefined&&<span className="tr-progress">{node.progress}%</span>}
+      {node.isLeaf&&<span className="tr-status" style={{color,background:isWarn?'var(--amber-light)':'var(--green-light)'}}>{isWarn?'!':'✓'}</span>}
+      <span className="tr-owner">{node.owner}</span>
     </div>
-  );
+    {open&&hasKids&&node.children.map(ch=><TreeNode key={ch.id} node={ch} depth={depth+1}/>)}
+  </div>);
 }
 
-/* ─── LINE Phone Mockup ─── */
 function LINEPhone({children}){
-  return(
-    <div className="phone-wrap">
-      <div className="phone-frame">
-        <div className="phone-status"><span className="phone-time">9:50</span><div className="phone-island"/><div className="phone-status-icons"><div className="phone-battery"><div className="phone-battery-fill"/></div></div></div>
-        <div className="line-nav"><div className="line-nav-back"><svg width="10" height="16" viewBox="0 0 10 16" fill="none"><path d="M8.5 1.5L2 8l6.5 6.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></div><div className="line-nav-name">フォーカスゴール通知</div><div style={{width:24}}/></div>
-        <div className="line-chat">
-          <div className="line-date-pill">{TODAY_JP}</div>
-          <div className="line-msg-row">
-            <div className="line-avatar-circle"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 14.5c0-3 3-5 7-5s7 2 7 5" stroke="#fff" strokeWidth="1.2"/><circle cx="8" cy="5" r="3.5" stroke="#fff" strokeWidth="1.2"/></svg></div>
-            <div className="line-msg-col">
-              <div className="line-sender">ゴール通知Bot</div>
-              <div className="line-bubble-wrap"><div className="line-bubble-body">{children}</div><div className="line-read-time"><span className="line-read">既読</span><span>9:50</span></div></div>
-            </div>
-          </div>
-        </div>
-        <div className="line-input-bar"><div className="line-input-plus">+</div><div className="line-input-field">メッセージを入力</div></div>
-        <div className="phone-home-bar"><div className="phone-home-indicator"/></div>
-      </div>
-    </div>
-  );
+  return(<div className="phone-wrap"><div className="phone-frame">
+    <div className="phone-status"><span className="phone-time">9:50</span><div className="phone-island"/><div className="phone-status-right"><div className="phone-battery"><div className="phone-battery-fill"/></div></div></div>
+    <div className="line-nav"><div className="line-nav-left"><svg width="10" height="16" viewBox="0 0 10 16" fill="none"><path d="M8.5 1.5L2 8l6.5 6.5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg></div><div className="line-nav-center"><div className="line-nav-name">フォーカスゴール通知</div></div><div style={{width:24}}/></div>
+    <div className="line-chat"><div className="line-date-pill">{TODAY_JP}</div><div className="line-msg-row"><div className="line-avatar-circle"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 14.5c0-3 3-5 7-5s7 2 7 5" stroke="#fff" strokeWidth="1.2"/><circle cx="8" cy="5" r="3.5" stroke="#fff" strokeWidth="1.2"/></svg></div><div className="line-msg-col"><div className="line-sender">ゴール通知Bot</div><div className="line-bubble-wrap"><div className="line-bubble-body">{children}</div><div className="line-read-time"><span className="line-read">既読</span><span>9:50</span></div></div></div></div></div>
+    <div className="line-input-bar"><div className="line-input-plus">+</div><div className="line-input-field">メッセージを入力</div></div>
+    <div className="phone-home-bar"><div className="phone-home-indicator"/></div>
+  </div></div>);
 }
 
-/* ─── ダークモード切り替え ─── */
-function DarkModeSwitch({dark, onToggle}){
-  return (
-    <button className="dm-switch" onClick={onToggle} title={dark ? "ライトモードに切替" : "ダークモードに切替"}>
-      {dark ? <Icon.sun style={{color:'var(--amber)'}}/> : <Icon.moon style={{color:'var(--ink-3)'}}/>}
-      <span className="dm-label">{dark ? "ライト" : "ダーク"}</span>
-    </button>
-  );
-}
-
-/* ─── ヘルプガイド（マネージャー版） ─── */
 function HelpGuide({show,onClose}){
-  const [section,setSection]=useState(0);
-  if(!show) return null;
-
-  const sections = [
-    {
-      title: "このアプリについて",
-      icon: "🎯",
-      content: (
-        <div className="help-section">
-          <p className="help-text">
-            <strong>フォーカスゴール</strong>は、ゴールツリーの末端（＝これ以上分解されていない具体的なゴール）を一覧し、自分と直下メンバーの進捗を管理するアプリです。
-          </p>
-          <div className="help-box">
-            <div className="help-box-title">4つの画面</div>
-            <div className="help-box-item"><span className="help-badge">今日のゴール</span>自分のフォーカスゴールをカード形式で一覧</div>
-            <div className="help-box-item"><span className="help-badge">メンバー管理</span>直下メンバーのゴール状況を確認・管理</div>
-            <div className="help-box-item"><span className="help-badge">ゴールツリー</span>チーム全体の階層構造を表示</div>
-            <div className="help-box-item"><span className="help-badge">LINE通知</span>毎朝届くLINE通知のプレビュー</div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      title: "ゴールカードの見方",
-      icon: "📋",
-      content: (
-        <div className="help-section">
-          <div className="help-box">
-            <div className="help-box-title">カード内の情報</div>
-            <div className="help-box-item"><span className="help-badge" style={{background:'var(--green-light)',color:'var(--green)'}}>タイトル</span>フォーカスゴールの名前</div>
-            <div className="help-box-item"><span className="help-badge" style={{background:'var(--surface-3)',color:'var(--ink-3)'}}>01/30 → 03/15</span>設定日 → 期限日</div>
-            <div className="help-box-item"><span className="help-badge" style={{background:'var(--blue-light)',color:'var(--blue)'}}>進捗バー</span>現在の進捗率（%）</div>
-            <div className="help-box-item"><span className="help-badge" style={{background:'var(--amber-light)',color:'var(--amber)'}}>残○日 / ○日超過</span>期限までの残日数（超過時は赤表示）</div>
-          </div>
-          <div className="help-box" style={{marginTop:12}}>
-            <div className="help-box-title">注意マーク（⚠️）の意味</div>
-            <div className="help-box-item"><span className="help-chip help-chip--amber">○日間更新なし</span>長期間進捗が更新されていない</div>
-            <div className="help-box-item"><span className="help-chip help-chip--amber">粒度が粗い</span>もう少し具体的に分解できる可能性</div>
-            <div className="help-box-item"><span className="help-chip help-chip--red">期限超過</span>期限を過ぎている</div>
-            <div className="help-box-item"><span className="help-chip help-chip--amber">ペース遅れ</span>残り期間に対して進捗が遅い</div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      title: "メンバー管理",
-      icon: "👥",
-      content: (
-        <div className="help-section">
-          <p className="help-text">直下メンバーのフォーカスゴールを一括確認できるマネージャー専用画面です。</p>
-          <div className="help-box" style={{marginTop:10}}>
-            <div className="help-box-title">画面の構成</div>
-            <div className="help-box-item"><span className="help-badge" style={{background:'var(--amber-light)',color:'var(--amber)'}}>注意サマリー</span>AIが検知したチーム全体の注意点</div>
-            <div className="help-box-item"><span className="help-badge">サマリーグリッド</span>フォーカスゴール数・注意項目数・更新なし数・粒度確認数</div>
-            <div className="help-box-item"><span className="help-badge">メンバーカード</span>各メンバーのゴールを展開して確認</div>
-          </div>
-          <div className="help-box" style={{marginTop:12}}>
-            <div className="help-box-title">メンバーカードの操作</div>
-            <div className="help-box-item"><span className="help-badge">カードをタップ</span>メンバーのゴール一覧を展開/折りたたみ</div>
-            <div className="help-box-item"><span className="help-badge">期限順 / 進捗順</span>展開時、メンバーごとにソート可能</div>
-            <div className="help-box-item"><span className="help-badge" style={{background:'var(--amber-light)',color:'var(--amber)'}}>確認する</span>注意項目を確認済みにする（トグル）</div>
-            <div className="help-box-item"><span className="help-badge">パス照会</span>上位ゴールからの経路を確認</div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      title: "操作ガイド",
-      icon: "🔧",
-      content: (
-        <div className="help-section">
-          <div className="help-box">
-            <div className="help-box-title">ソート（並び替え）</div>
-            <div className="help-box-item"><span className="help-badge">期限順 ↑↓</span>期限が近い順 / 遠い順</div>
-            <div className="help-box-item"><span className="help-badge">進捗順 ↑↓</span>進捗が低い順 / 高い順</div>
-            <p className="help-note">同じボタンをタップすると昇順 ↔ 降順を切り替えます</p>
-          </div>
-          <div className="help-box" style={{marginTop:12}}>
-            <div className="help-box-title">ヘッダーの数値</div>
-            <div className="help-box-item"><span className="help-badge">自分</span>自分のフォーカスゴール件数</div>
-            <div className="help-box-item"><span className="help-badge">直下</span>直下メンバーの人数</div>
-            <div className="help-box-item"><span className="help-badge" style={{background:'var(--amber-light)',color:'var(--amber)'}}>注意項目</span>チーム全体の注意すべきゴール件数</div>
-          </div>
-          <div className="help-box" style={{marginTop:12}}>
-            <div className="help-box-title">その他の機能</div>
-            <div className="help-box-item"><span className="help-badge">🌙 ダークモード</span>ヘッダー右の月/太陽アイコンで切替</div>
-            <div className="help-box-item"><span className="help-badge">注目ポイント</span>AIが自動検知した今日注力すべき項目</div>
-          </div>
-        </div>
-      ),
-    },
-    {
-      title: "ツリー / LINE",
-      icon: "🌲",
-      content: (
-        <div className="help-section">
-          <div className="help-box">
-            <div className="help-box-title">ゴールツリー</div>
-            <div className="help-box-item"><span className="help-chip" style={{background:'var(--green-light)',color:'var(--green)'}}>順調</span>進捗に問題なし</div>
-            <div className="help-box-item"><span className="help-chip" style={{background:'var(--amber-light)',color:'var(--amber)'}}>注意</span>期限超過・更新なし・粒度粗いなど</div>
-            <p className="help-note" style={{marginTop:6}}>親ノードをタップで展開/折りたたみ</p>
-          </div>
-          <div className="help-box" style={{marginTop:12}}>
-            <div className="help-box-title">LINE通知</div>
-            <p className="help-text">毎朝 9:50 に届くLINE通知のプレビューです。マネージャーには2種類届きます。</p>
-            <div className="help-box-item"><span className="help-badge">自分の通知</span>自分のフォーカスゴール一覧＋注目ポイント</div>
-            <div className="help-box-item"><span className="help-badge">メンバーサマリー</span>直下メンバーの件数・注意件数の概要</div>
-          </div>
-        </div>
-      ),
-    },
+  const[section,setSection]=useState(0);if(!show)return null;
+  const sections=[
+    {title:"アプリ概要",icon:"🎯",content:(<div className="help-section"><p className="help-text"><strong>フォーカスゴール</strong>は末端ゴールの管理を支援するアプリです。統括として自分のゴールとチームのゴールを一括管理できます。</p><div className="help-box"><div className="help-box-title">4つの画面</div><div className="help-box-item"><span className="help-badge">今日のゴール</span>自分のフォーカスゴール一覧</div><div className="help-box-item"><span className="help-badge">メンバー管理</span>直下メンバーのゴール管理</div><div className="help-box-item"><span className="help-badge">ゴールツリー</span>階層構造を表示</div><div className="help-box-item"><span className="help-badge">LINE通知</span>LINE通知プレビュー</div></div></div>)},
+    {title:"ゴールカード",icon:"📋",content:(<div className="help-section"><div className="help-box"><div className="help-box-title">カード内の情報</div><div className="help-box-item"><span className="help-badge" style={{background:'var(--green-light)',color:'var(--green)'}}>円形グラフ</span>進捗率（%）</div><div className="help-box-item"><span className="help-badge" style={{background:'var(--amber-light)',color:'var(--amber)'}}>残○日</span>期限までの残日数</div></div><div className="help-box" style={{marginTop:12}}><div className="help-box-title">注意マークの意味</div><div className="help-box-item"><span className="help-chip help-chip--amber">更新なし</span>長期間更新がない</div><div className="help-box-item"><span className="help-chip help-chip--amber">粒度粗い</span>もう少し具体化できる</div><div className="help-box-item"><span className="help-chip help-chip--red">期限超過</span>期限を過ぎている</div></div></div>)},
+    {title:"メンバー管理",icon:"👥",content:(<div className="help-section"><p className="help-text">直下メンバーのフォーカスゴールを一括確認できる統括専用画面です。</p><div className="help-box" style={{marginTop:10}}><div className="help-box-title">画面の構成</div><div className="help-box-item"><span className="help-badge" style={{background:'var(--amber-light)',color:'var(--amber)'}}>注意サマリー</span>チーム全体の注意点</div><div className="help-box-item"><span className="help-badge">メンバーカード</span>各メンバーのゴールを展開して確認</div></div></div>)},
+    {title:"操作ガイド",icon:"🔧",content:(<div className="help-section"><div className="help-box"><div className="help-box-title">操作</div><div className="help-box-item"><span className="help-badge">パス照会</span>上位ゴールからの経路を確認</div><div className="help-box-item"><span className="help-badge">確認する</span>注意項目を確認済みにする</div><div className="help-box-item"><span className="help-badge">🌙 ダークモード</span>ヘッダー右のアイコンで切替</div></div></div>)},
   ];
-
-  return(
-    <div className="overlay" onClick={onClose}>
-      <div className="help-modal" onClick={e=>e.stopPropagation()}>
-        <div className="help-modal-head">
-          <div className="help-modal-title">使い方ガイド</div>
-          <button className="modal-close" onClick={onClose}><Icon.close/></button>
-        </div>
-        <div className="help-tabs">
-          {sections.map((s,i)=>(
-            <button key={i} className={"help-tab"+(section===i?" help-tab--active":"")} onClick={()=>setSection(i)}>
-              <span className="help-tab-icon">{s.icon}</span>
-              <span className="help-tab-label">{s.title}</span>
-            </button>
-          ))}
-        </div>
-        <div className="help-content">
-          {sections[section].content}
-        </div>
-        <div className="help-footer">
-          <div className="help-dots">
-            {sections.map((_,i)=><span key={i} className={"help-dot"+(section===i?" help-dot--active":"")} onClick={()=>setSection(i)}/>)}
-          </div>
-          <div className="help-nav-btns">
-            {section>0 && <button className="help-nav-btn" onClick={()=>setSection(s=>s-1)}>← 前へ</button>}
-            {section<sections.length-1
-              ? <button className="help-nav-btn help-nav-btn--primary" onClick={()=>setSection(s=>s+1)}>次へ →</button>
-              : <button className="help-nav-btn help-nav-btn--primary" onClick={onClose}>閉じる</button>
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return(<div className="overlay" onClick={onClose}><div className="help-modal" onClick={e=>e.stopPropagation()}>
+    <div className="help-modal-head"><div className="help-modal-title">使い方ガイド</div><button className="modal-close" onClick={onClose}><Icon.close/></button></div>
+    <div className="help-tabs">{sections.map((s,i)=>(<button key={i} className={"help-tab"+(section===i?" help-tab--active":"")} onClick={()=>setSection(i)}><span className="help-tab-icon">{s.icon}</span><span className="help-tab-label">{s.title}</span></button>))}</div>
+    <div className="help-content">{sections[section].content}</div>
+    <div className="help-footer"><div className="help-dots">{sections.map((_,i)=><span key={i} className={"help-dot"+(section===i?" help-dot--active":"")} onClick={()=>setSection(i)}/>)}</div><div className="help-nav-btns">{section>0&&<button className="help-nav-btn" onClick={()=>setSection(s=>s-1)}>← 前へ</button>}{section<sections.length-1?<button className="help-nav-btn help-nav-btn--primary" onClick={()=>setSection(s=>s+1)}>次へ →</button>:<button className="help-nav-btn help-nav-btn--primary" onClick={onClose}>閉じる</button>}</div></div>
+  </div></div>);
 }
 
-/* ═══ メインApp ═══ */
+/* ═══ Main App ═══ */
 function App(){
   const[tab,setTab]=useState("mygoals");
   const[myGoals,setMyGoals]=useState(MY_GOALS);
@@ -579,13 +314,7 @@ function App(){
   const[pathGoal,setPathGoal]=useState(null);
   const[dark,setDark]=useState(false);
   const[showHelp,setShowHelp]=useState(false);
-  const toggleDark=useCallback(()=>{
-    setDark(d=>{
-      document.documentElement.setAttribute('data-theme',d?'light':'dark');
-      return !d;
-    });
-  },[]);
-
+  const toggleDark=useCallback(()=>{setDark(d=>{document.documentElement.setAttribute('data-theme',d?'light':'dark');return !d;});},[]);
   const handleConfirm=useCallback(id=>{
     setMyGoals(p=>p.map(g=>g.id===id?{...g,confirmed:!g.confirmed}:g));
     setMembers(p=>{const n=JSON.parse(JSON.stringify(p));Object.values(n).forEach(m=>{m.goals.forEach(g=>{if(g.id===id)g.confirmed=!g.confirmed;});});return n;});
@@ -597,439 +326,267 @@ function App(){
   const myAttention=myGoals.filter(g=>g.alertKey).length;
   const staleCount=allMG.filter(g=>g.alertKey==="stale").length;
   const granCount=allMG.filter(g=>g.alertKey==="granularity").length;
+  const teamAvgProgress=allMG.length>0?Math.round(allMG.reduce((s,g)=>s+(g.progress||0),0)/allMG.length):0;
 
-  /* ── ソート ── */
-  const [sortBy,setSortBy]=useState('deadline');
-  const [sortDir,setSortDir]=useState('asc');
-  const toggleSort=useCallback((field)=>{
-    if(sortBy===field) setSortDir(d=>d==='asc'?'desc':'asc');
-    else { setSortBy(field); setSortDir('asc'); }
-  },[sortBy]);
+  const[sortBy,setSortBy]=useState('deadline');const[sortDir,setSortDir]=useState('asc');
+  const toggleSort=useCallback(f=>{if(sortBy===f)setSortDir(d=>d==='asc'?'desc':'asc');else{setSortBy(f);setSortDir('asc');}},[sortBy]);
+  const sortedMyGoals=useMemo(()=>{const a=[...myGoals];a.sort((x,y)=>{let v;if(sortBy==='deadline'){v=(calcRemainingDays(x.deadline)??999)-(calcRemainingDays(y.deadline)??999);}else{v=(x.progress||0)-(y.progress||0);}return sortDir==='asc'?v:-v;});return a;},[myGoals,sortBy,sortDir]);
+  const lineMyGoals=useMemo(()=>[...myGoals].sort((a,b)=>(calcRemainingDays(a.deadline)??999)-(calcRemainingDays(b.deadline)??999)),[myGoals]);
+  const tabs=[{id:"mygoals",label:"今日のゴール"},{id:"manager",label:"メンバー管理"},{id:"tree",label:"ゴールツリー"},{id:"line",label:"LINE通知"}];
 
-  const sortedMyGoals = useMemo(()=>{
-    const arr=[...myGoals];
-    arr.sort((a,b)=>{
-      let v;
-      if(sortBy==='deadline'){
-        const ra=calcRemainingDays(a.deadline)??999, rb=calcRemainingDays(b.deadline)??999;
-        v=ra-rb;
-      } else { v=(a.progress||0)-(b.progress||0); }
-      return sortDir==='asc'?v:-v;
-    });
-    return arr;
-  },[myGoals,sortBy,sortDir]);
+  return(<div className="app">
+    <PathPopup show={pathGoal!==null} goal={pathGoal} onClose={()=>setPathGoal(null)}/>
+    <HelpGuide show={showHelp} onClose={()=>setShowHelp(false)}/>
 
-  const lineMyGoals = useMemo(()=>{
-    return [...myGoals].sort((a,b)=>{
-      const ra=calcRemainingDays(a.deadline)??999, rb=calcRemainingDays(b.deadline)??999;
-      return ra-rb;
-    });
-  },[myGoals]);
+    <div className="sticky-top">
+    <header className="header"><div className="container header-inner">
+      <div className="header-left"><div className="header-brand"><div className="header-brand-title">Focus Goals</div></div></div>
+      <div className="header-right">
+        <div className="header-identity"><div className="header-date">{TODAY_JP}</div><div className="header-name">三上 大慈<span className="header-dept">統括</span></div></div>
+        <button className="dm-switch" onClick={toggleDark}>{dark?<Icon.sun style={{color:'var(--amber)'}}/>:<Icon.moon style={{color:'var(--ink-3)'}}/>}</button>
+        <button className="help-trigger" onClick={()=>setShowHelp(true)}><Icon.help/></button>
+      </div>
+    </div></header>
 
-  const tabs=[
-    {id:"mygoals",label:"今日のゴール"},
-    {id:"manager",label:"メンバー管理"},
-    {id:"tree",label:"ゴールツリー"},
-    {id:"line",label:"LINE通知"},
-  ];
+    <div className="metrics-strip"><div className="container metrics-inner">
+      {[{label:"フォーカスゴール（チーム）",value:allMG.length,color:"var(--ink)"},{label:"直下メンバー",value:entries.length,color:"var(--ink)"},{label:"注意事項（チーム）",value:attentionCount,color:attentionCount>0?"var(--amber)":"var(--green)"},{label:"平均進捗（チーム）",value:teamAvgProgress+"%",color:"var(--accent)"}].map((m,i)=>(
+        <div key={i} className="metric-cell"><div className="metric-value" style={{color:m.color}}>{m.value}</div><div className="metric-label">{m.label}</div></div>
+      ))}
+    </div></div>
 
-  return(
-    <div className="app">
-      <PathPopup show={pathGoal!==null} goal={pathGoal} onClose={()=>setPathGoal(null)}/>
-      <HelpGuide show={showHelp} onClose={()=>setShowHelp(false)}/>
-
-      <header className="header">
-        <div className="container header-inner">
-          <div className="header-left">
-            <div className="header-logo">
-              <div className="header-logo-mark" style={{background:'linear-gradient(135deg,#2563eb,#3b82f6)'}}>三</div>
-              <div><div className="header-name">三上大慈</div><div className="header-dept">コーポレート マネージャー</div></div>
-            </div>
-          </div>
-          <div className="header-right">
-            <div className="header-stat"><span className="header-stat-num">{myGoals.length}</span><span className="header-stat-label">自分</span></div>
-            <div className="header-stat-divider"/>
-            <div className="header-stat"><span className="header-stat-num">{entries.length}</span><span className="header-stat-label">直下</span></div>
-            <div className="header-stat-divider"/>
-            <div className="header-stat"><span className="header-stat-num" style={{color:attentionCount>0?'var(--amber)':'var(--green)'}}>{attentionCount}</span><span className="header-stat-label">注意項目</span></div>
-            <DarkModeSwitch dark={dark} onToggle={toggleDark}/>
-            <button className="help-trigger" onClick={()=>setShowHelp(true)} title="使い方ガイド"><Icon.help/></button>
-            <div className="header-date">{TODAY_DISPLAY}</div>
-          </div>
-        </div>
-      </header>
-
-      <nav className="nav"><div className="container nav-inner">
-        {tabs.map(t=><button key={t.id} className={"nav-btn"+(tab===t.id?" nav-btn--active":"")} onClick={()=>setTab(t.id)}>{t.label}</button>)}
-      </div></nav>
-
-      <main className="main"><div className="container">
-
-        {tab==="mygoals"&&(
-          <div className="page fade-in">
-            <div className="insight-card">
-              <div className="insight-head"><div className="insight-icon">!</div><span className="insight-title">注目ポイント</span></div>
-              <p className="insight-body">
-                「<strong style={{color:'var(--amber)'}}>支払調書の作成と配布</strong>」がしばらく更新されていません。また「<strong style={{color:'var(--amber)'}}>三上大のゴール</strong>」はもう少し具体的なアクションに分解できそうです。
-              </p>
-            </div>
-            <div className="sort-bar">
-              <button className={"sort-btn"+(sortBy==='deadline'?" sort-btn--active":"")} onClick={()=>toggleSort('deadline')}>
-                期限順 {sortBy==='deadline' && (sortDir==='asc'?<Icon.sortAsc/>:<Icon.sortDesc/>)}
-              </button>
-              <button className={"sort-btn"+(sortBy==='progress'?" sort-btn--active":"")} onClick={()=>toggleSort('progress')}>
-                進捗順 {sortBy==='progress' && (sortDir==='asc'?<Icon.sortAsc/>:<Icon.sortDesc/>)}
-              </button>
-            </div>
-            <div className="goal-list">{sortedMyGoals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*40+80}/>)}</div>
-          </div>
-        )}
-
-        {tab==="manager"&&(
-          <div className="page fade-in">
-            <div className="insight-card" style={{borderLeft:'3px solid var(--amber)'}}>
-              <div className="insight-head"><div className="insight-icon" style={{background:'var(--amber-light)',color:'var(--amber)'}}>!</div><span className="insight-title">注意サマリー</span></div>
-              <p className="insight-body">
-                <strong style={{color:'var(--red)'}}>五十嵐壮太郎</strong>・<strong style={{color:'var(--red)'}}>谷口寿美子</strong>のゴールが1月初旬から更新されていません。<strong style={{color:'var(--amber)'}}>石川翔太</strong>・<strong style={{color:'var(--amber)'}}>貴志祐介</strong>はもう少し具体的にできるゴールがあります。<strong style={{color:'var(--green)'}}>星野舜</strong>は構築PJ順調ですが「取引先マスターデータ」がしばらく更新なしです。
-              </p>
-            </div>
-            <SummaryGrid items={[
-              {label:"フォーカスゴール",value:allMG.length,accent:"var(--green)"},
-              {label:"注意項目",value:attentionCount,accent:"var(--amber)"},
-              {label:"更新なし",value:staleCount,accent:"var(--red)"},
-              {label:"粒度確認",value:granCount,accent:"var(--amber)"},
-            ]}/>
-            {entries.map(([name,data],i)=><MemberCard key={name} name={name} goals={data.goals} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*50+80}/>)}
-          </div>
-        )}
-
-        {tab==="tree"&&(
-          <div className="page fade-in">
-            <div className="tree-legend">
-              <span className="legend-chip"><span className="legend-dot" style={{background:'var(--green)'}}/>順調</span>
-              <span className="legend-chip"><span className="legend-dot" style={{background:'var(--amber)'}}/>注意</span>
-              <span className="legend-chip"><span className="legend-dot" style={{background:'var(--green)'}}/>フォーカスゴール</span>
-            </div>
-            <div className="tree-root">
-              <div className="tree-root-inner">
-                <span className="t-tag" style={{background:'var(--blue-light)',color:'var(--blue)'}}>ROOT</span>
-                <span className="tree-root-title">{TREE_DATA.title}</span>
-                <span className="tree-root-sub">{TREE_DATA.owner}</span>
-              </div>
-            </div>
-            <div className="tree-container"><TreeNode node={TREE_DATA} depth={0}/></div>
-          </div>
-        )}
-
-        {tab==="line"&&(
-          <div className="page fade-in">
-            <p style={{textAlign:'center',color:'var(--ink-3)',fontSize:13,marginBottom:12}}>毎朝 9:50 にプッシュ通知で届くイメージ</p>
-
-            <p className="line-section-label">自分のフォーカスゴール通知</p>
-            <LINEPhone>
-              <div className="lb-head">おはようございます、三上大慈さん</div>
-              <div className="lb-greet">今日のフォーカスゴール {myGoals.length}件（期限順）</div>
-              {lineMyGoals.map((g,i)=>{
-                const remaining=calcRemainingDays(g.deadline);
-                const isW=g.status==="warning"||g.alertKey;
-                return(
-                  <div key={i} className={"lb-line-item"+(isW?" lb-line-item--warn":"")}>
-                    <span className="lb-line-title">{g.title}</span>
-                    <span className="lb-line-days" style={{color:remaining!==null&&remaining<0?'#c44':remaining!==null&&remaining<7?'#b8860b':'#999'}}>
-                      {remaining!==null&&(remaining<0?`${Math.abs(remaining)}日超過`:`残${remaining}日`)}
-                    </span>
-                  </div>
-                );
-              })}
-              <div className="lb-suggest"><div className="lb-suggest-label">注目ポイント</div><div className="lb-suggest-text">
-                「支払調書」がしばらく更新されていません。「三上大のゴール」はもう少し具体的に分解しましょう。
-              </div></div>
-              <div className="lb-btns"><div className="lb-btn lb-btn--primary">Webで詳細を見る →</div></div>
-            </LINEPhone>
-
-            <p className="line-section-label" style={{marginTop:24}}>直下メンバー サマリー</p>
-            <LINEPhone>
-              <div className="lb-head" style={{borderBottomColor:'#2563eb'}}>直下メンバー（{entries.length}名）</div>
-              <div className="lb-greet">注意項目 {attentionCount}件 ｜ 詳細はWebで確認</div>
-
-              {entries.map(([name,data],i)=>{
-                const alerts=data.goals.filter(g=>g.alertKey).length;
-                const hasAlert=alerts>0;
-                return(
-                  <div key={i} className={"lb-member-row"+(hasAlert?" lb-member-row--warn":"")}>
-                    <div className="lb-member-name">{name}</div>
-                    <div className="lb-member-stats">
-                      <span>{data.goals.length}件</span>
-                      {hasAlert
-                        ? <span className="lb-member-alert">注意{alerts}</span>
-                        : <span className="lb-member-ok">✓</span>
-                      }
-                    </div>
-                    {hasAlert&&<div className="lb-member-detail">
-                      {data.goals.filter(g=>g.alertKey).map((g,j)=>(
-                        <div key={j} className="lb-member-issue">· {g.title}</div>
-                      ))}
-                    </div>}
-                  </div>
-                );
-              })}
-
-              <div className="lb-btns" style={{marginTop:10}}><div className="lb-btn lb-btn--primary">Webで詳細を見る →</div></div>
-            </LINEPhone>
-          </div>
-        )}
-
-      </div></main>
+    <nav className="nav"><div className="container nav-inner">{tabs.map(t=><button key={t.id} className={"nav-btn"+(tab===t.id?" nav-btn--active":"")} onClick={()=>setTab(t.id)}>{t.label}</button>)}</div></nav>
     </div>
-  );
+
+    <main className="main"><div className="container">
+
+      {tab==="mygoals"&&(<div className="page fade-in">
+        <div className="insight-card"><div className="insight-content"><div className="insight-label">注目ポイント</div><p className="insight-body">「<strong style={{color:'var(--amber)'}}>支払調書の作成と配布</strong>」がしばらく更新されていません。また「<strong style={{color:'var(--amber)'}}>三上大のゴール</strong>」はもう少し具体的なアクションに分解できそうです。</p></div></div>
+        <div className="sort-bar"><div className="section-label">本日のフォーカス</div><div className="sort-buttons"><button className={"sort-btn"+(sortBy==='deadline'?" sort-btn--active":"")} onClick={()=>toggleSort('deadline')}>期限順 {sortBy==='deadline'&&(sortDir==='asc'?<Icon.sortAsc/>:<Icon.sortDesc/>)}</button><button className={"sort-btn"+(sortBy==='progress'?" sort-btn--active":"")} onClick={()=>toggleSort('progress')}>進捗順 {sortBy==='progress'&&(sortDir==='asc'?<Icon.sortAsc/>:<Icon.sortDesc/>)}</button></div></div>
+        <div className="goal-list">{sortedMyGoals.map((g,i)=><GoalCard key={g.id} goal={g} index={i} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*40+80}/>)}</div>
+      </div>)}
+
+      {tab==="manager"&&(<div className="page fade-in">
+        <div className="insight-card" style={{borderLeftColor:'var(--amber)'}}><div className="insight-content"><div className="insight-label">注意サマリー</div><p className="insight-body"><strong style={{color:'var(--red)'}}>五十嵐壮太郎</strong>・<strong style={{color:'var(--red)'}}>谷口寿美子</strong>のゴールが1月初旬から更新されていません。<strong style={{color:'var(--amber)'}}>石川翔太</strong>・<strong style={{color:'var(--amber)'}}>貴志祐介</strong>はもう少し具体的にできるゴールがあります。<strong style={{color:'var(--green)'}}>星野舜</strong>は構築PJ順調ですが「取引先マスターデータ」が停滞中。</p></div></div>
+        <SummaryGrid items={[{label:"フォーカスゴール",value:allMG.length,accent:"var(--green)"},{label:"注意項目",value:attentionCount,accent:"var(--amber)"},{label:"更新なし",value:staleCount,accent:"var(--red)"},{label:"粒度確認",value:granCount,accent:"var(--amber)"}]}/>
+        {entries.map(([name,data],i)=><MemberCard key={name} name={name} goals={data.goals} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*50+80}/>)}
+      </div>)}
+
+      {tab==="tree"&&(<div className="page fade-in">
+        <div className="tree-legend"><span className="legend-chip"><span className="legend-dot" style={{background:'var(--green)'}}/>順調</span><span className="legend-chip"><span className="legend-dot" style={{background:'var(--amber)'}}/>注意</span></div>
+        <div className="tree-root"><div className="tree-root-inner"><span className="t-tag" style={{background:'var(--blue-light)',color:'var(--blue)'}}>ROOT</span><span className="tree-root-title">{TREE_DATA.title}</span><span className="tree-root-sub">{TREE_DATA.owner}</span></div></div>
+        <div className="tree-container"><TreeNode node={TREE_DATA} depth={0}/></div>
+      </div>)}
+
+      {tab==="line"&&(<div className="page fade-in">
+        <p style={{textAlign:'center',color:'var(--ink-3)',fontSize:13,marginBottom:12,fontFamily:'var(--font-sans)'}}>毎朝 9:50 にプッシュ通知で届くイメージ</p>
+        <p className="line-section-label">自分のフォーカスゴール通知</p>
+        <LINEPhone>
+          <div className="lb-head">おはようございます、三上大慈さん</div>
+          <div className="lb-greet">今日のフォーカスゴール {myGoals.length}件（期限順）</div>
+          {lineMyGoals.map((g,i)=>{const r=calcRemainingDays(g.deadline);const isW=g.status==="warning"||g.alertKey;return(<div key={i} className={"lb-line-item"+(isW?" lb-line-item--warn":"")}><span className="lb-line-title">{g.title}</span><span className="lb-line-days" style={{color:r!==null&&r<0?'#c44':r!==null&&r<7?'#b8860b':'#999'}}>{r!==null&&(r<0?`${Math.abs(r)}日超過`:`残${r}日`)}</span></div>);})}
+          <div className="lb-suggest"><div className="lb-suggest-label">注目ポイント</div><div className="lb-suggest-text">「支払調書」がしばらく更新されていません。「三上大のゴール」はもう少し具体的に分解しましょう。</div></div>
+          <div className="lb-btns"><div className="lb-btn lb-btn--primary">Webで詳細を見る →</div></div>
+        </LINEPhone>
+        <p className="line-section-label" style={{marginTop:24}}>直下メンバー サマリー</p>
+        <LINEPhone>
+          <div className="lb-head" style={{borderBottomColor:'#2563eb'}}>直下メンバー（{entries.length}名）</div>
+          <div className="lb-greet">注意項目 {attentionCount}件 ｜ 詳細はWebで確認</div>
+          {entries.map(([name,data],i)=>{const alerts=data.goals.filter(g=>g.alertKey).length;const hasAlert=alerts>0;return(<div key={i} className={"lb-member-row"+(hasAlert?" lb-member-row--warn":"")}><div className="lb-member-name">{name}</div><div className="lb-member-stats"><span>{data.goals.length}件</span>{hasAlert?<span className="lb-member-alert">注意{alerts}</span>:<span className="lb-member-ok">✓</span>}</div>{hasAlert&&<div className="lb-member-detail">{data.goals.filter(g=>g.alertKey).map((g,j)=>(<div key={j} className="lb-member-issue">· {g.title}</div>))}</div>}</div>);})}
+          <div className="lb-btns" style={{marginTop:10}}><div className="lb-btn lb-btn--primary">Webで詳細を見る →</div></div>
+        </LINEPhone>
+      </div>)}
+
+    </div></main>
+    <footer className="footer"><div className="container footer-inner"><span>ADDNESS FOCUS GOAL SYSTEM</span><span>v2.0</span></div></footer>
+  </div>);
 }
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 
 <style>
-/* ═══ Header ═══ */
-.header{background:var(--surface);border-bottom:1px solid var(--surface-3);padding:14px 0;transition:background 0.3s,border-color 0.3s;}
+.header{padding:12px 0 10px;border-bottom:var(--border-thick);transition:border-color 0.4s;}
 .header-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
-.header-left{display:flex;align-items:center;gap:14px;}
-.header-logo{display:flex;align-items:center;gap:10px;}
-.header-logo-mark{width:36px;height:36px;border-radius:10px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;}
-.header-name{font-size:15px;font-weight:800;color:var(--ink);line-height:1.2;}
-.header-dept{font-size:11px;color:var(--ink-3);font-weight:400;}
+.header-brand-label{font-size:9px;font-weight:700;letter-spacing:4px;color:var(--accent);text-transform:uppercase;font-family:var(--font-sans);}
+.header-brand-title{font-size:24px;font-weight:300;color:var(--ink);line-height:1.1;letter-spacing:-1px;font-style:italic;}
 .header-right{display:flex;align-items:center;gap:14px;}
-.header-stat{display:flex;flex-direction:column;align-items:center;}
-.header-stat-num{font-size:20px;font-weight:900;color:var(--ink);line-height:1;}
-.header-stat-label{font-size:9px;color:var(--ink-4);font-weight:500;margin-top:2px;}
-.header-stat-divider{width:1px;height:24px;background:var(--surface-3);}
-.header-date{font-size:11px;color:var(--ink-4);font-variant-numeric:tabular-nums;}
-@media(min-width:768px){.header{padding:18px 0;}.header-logo-mark{width:40px;height:40px;font-size:17px;}.header-name{font-size:17px;}.header-stat-num{font-size:24px;}}
-
-/* ═══ Dark Mode Switch ═══ */
-.dm-switch{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;border:1px solid var(--surface-3);background:var(--surface-2);cursor:pointer;font-family:var(--font);transition:all 0.2s;}
-.dm-switch:hover{border-color:var(--ink-5);background:var(--surface-3);}
-.dm-label{font-size:10px;font-weight:600;color:var(--ink-3);}
-
-/* ═══ Nav ═══ */
-.nav{background:var(--surface);border-bottom:1px solid var(--surface-3);position:sticky;top:0;z-index:50;transition:background 0.3s,border-color 0.3s;}
-.nav-inner{display:flex;gap:0;}
-.nav-btn{flex:1;padding:11px 0;border:none;background:transparent;font-family:var(--font);font-size:12px;font-weight:500;color:var(--ink-4);cursor:pointer;border-bottom:2px solid transparent;transition:color 0.2s;}
+.header-identity{text-align:right;}
+.header-date{font-size:10px;color:var(--ink-3);font-family:var(--font-sans);}
+.header-name{font-size:17px;font-weight:700;color:var(--ink);font-family:var(--font-sans);line-height:1.2;}
+.header-dept{font-size:11px;color:var(--accent);font-weight:600;margin-left:8px;}
+@media(min-width:768px){.header-brand-title{font-size:28px;}.header-name{font-size:19px;}}
+.dm-switch{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:var(--border-thin);background:var(--surface-2);cursor:pointer;transition:all 0.2s;}
+.dm-switch:hover{border-color:var(--ink-4);background:var(--surface-3);}
+.help-trigger{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:var(--border-thin);background:var(--surface-2);cursor:pointer;color:var(--ink-3);transition:all 0.15s;flex-shrink:0;}
+.help-trigger:hover{border-color:var(--ink-4);background:var(--surface-3);color:var(--ink);}
+.metrics-strip{border-bottom:var(--border-thin);}
+.metrics-inner{display:grid;grid-template-columns:repeat(4,1fr);}
+.metric-cell{padding:10px 12px;text-align:center;border-right:var(--border-thin);}
+.metric-cell:last-child{border-right:none;}
+.metric-value{font-size:22px;font-weight:300;font-family:var(--font-sans);line-height:1;}
+.metric-label{font-size:7px;color:var(--ink-4);letter-spacing:1.2px;margin-top:4px;font-family:var(--font-sans);text-transform:uppercase;}
+@media(min-width:768px){.metric-value{font-size:26px;}.metric-label{font-size:8px;}}
+.sticky-top{position:sticky;top:0;z-index:50;background:var(--surface);backdrop-filter:blur(12px);transition:background 0.4s;box-shadow:var(--shadow-sm);}
+.nav{border-bottom:var(--border-thin);transition:background 0.4s,border-color 0.4s;}
+.nav-inner{display:flex;}
+.nav-btn{flex:1;padding:10px 0;border:none;background:transparent;font-family:var(--font-sans);font-size:11px;font-weight:500;color:var(--ink-4);cursor:pointer;border-bottom:2px solid transparent;transition:color 0.2s;letter-spacing:0.5px;}
 .nav-btn:hover{color:var(--ink-2);}
-.nav-btn--active{color:var(--ink);font-weight:700;border-bottom-color:var(--blue);}
-@media(min-width:768px){.nav-btn{font-size:13px;padding:14px 0;}}
-
-/* ═══ Main ═══ */
-.main{padding:20px 0 60px;}
-@media(min-width:768px){.main{padding:28px 0 80px;}}
+.nav-btn--active{color:var(--accent);font-weight:700;border-bottom-color:var(--accent);}
+@media(min-width:768px){.nav-btn{font-size:13px;padding:12px 0;}}
+.main{padding:24px 0 60px;}
+@media(min-width:768px){.main{padding:32px 0 80px;}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .fade-in{animation:fadeIn 0.3s ease forwards;}
-
-/* ═══ Insight Card ═══ */
-.insight-card{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow-sm);transition:background 0.3s,border-color 0.3s;}
-.insight-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.insight-icon{width:20px;height:20px;border-radius:6px;background:var(--amber-light);color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;}
-.insight-title{font-size:12px;font-weight:700;color:var(--ink-2);}
+.insight-card{display:flex;gap:16px;padding:18px 20px;margin-bottom:24px;border-left:3px solid var(--accent);background:var(--card);border-radius:0 var(--radius-lg) var(--radius-lg) 0;box-shadow:var(--shadow-sm);transition:background 0.4s;}
+.insight-content{flex:1;}
+.insight-label{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:6px;font-family:var(--font-sans);}
 .insight-body{font-size:13px;color:var(--ink-2);line-height:1.7;}
-@media(min-width:768px){.insight-card{padding:20px 24px;margin-bottom:24px;}.insight-body{font-size:14px;}}
-
-/* ═══ Goal Cards ═══ */
-.goal-list{display:flex;flex-direction:column;gap:10px;}
-.g-card{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--shadow-sm);transition:box-shadow 0.2s,background 0.3s,border-color 0.3s;}
-.g-card:hover{box-shadow:var(--shadow-md);}
-.g-card--warn{border-left:3px solid var(--amber);}
-.g-info{min-width:0;}
-.g-title{font-size:13px;font-weight:600;color:var(--ink);line-height:1.5;margin-bottom:2px;}
-.g-alert{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--amber);font-weight:600;margin-bottom:2px;}
-.g-meta{font-size:10px;color:var(--ink-4);margin-top:2px;font-variant-numeric:tabular-nums;}
-
-/* ═══ Sort Bar ═══ */
-.sort-bar{display:flex;gap:6px;margin-bottom:12px;}
-.sort-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:8px;border:1px solid var(--surface-3);background:var(--surface);color:var(--ink-3);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all 0.15s;}
-.sort-btn:hover{border-color:var(--ink-5);background:var(--surface-2);}
-.sort-btn--active{color:var(--ink);border-color:var(--ink-5);background:var(--surface-2);}
-
-/* ═══ Progress Row（1本バー + 残日数） ═══ */
-.progress-row{margin:10px 0;display:flex;align-items:center;gap:10px;}
-.progress-bar-wrap{flex:1;display:flex;align-items:center;gap:6px;min-width:0;}
-.progress-track{flex:1;height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden;}
-.progress-fill{height:100%;border-radius:3px;transition:width 0.6s ease;}
-.progress-pct{font-size:11px;font-weight:800;width:32px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums;}
-.progress-days{font-size:10px;font-weight:600;color:var(--ink-3);white-space:nowrap;flex-shrink:0;font-variant-numeric:tabular-nums;}
-.progress-days--overdue{color:var(--red);animation:overduePulse 2s ease-in-out infinite;}
-@keyframes overduePulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
-
-.g-actions{display:flex;gap:6px;}
-.g-btn{padding:7px 12px;border-radius:8px;border:1px solid var(--surface-3);background:var(--surface);color:var(--ink-2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:4px;transition:all 0.15s;white-space:nowrap;}
-.g-btn:hover{background:var(--surface-2);border-color:var(--ink-5);}
+@media(min-width:768px){.insight-card{padding:22px 28px;}.insight-body{font-size:14px;}}
+.sort-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:var(--border-thin);}
+.section-label{font-size:10px;font-weight:700;letter-spacing:3px;color:var(--ink-4);text-transform:uppercase;font-family:var(--font-sans);}
+.sort-buttons{display:flex;gap:6px;}
+.sort-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:6px;border:var(--border-thin);background:transparent;color:var(--ink-3);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:all 0.15s;}
+.sort-btn:hover{border-color:var(--ink-4);background:var(--surface-2);}
+.sort-btn--active{color:var(--ink);border-color:var(--ink-4);background:var(--surface-2);}
+.goal-list{display:flex;flex-direction:column;}
+.g-row{display:flex;gap:14px;padding:14px 18px;border-left:3px solid transparent;transition:background 0.15s,border-color 0.3s;}
+.g-row--stripe{background:var(--stripe);}
+.g-row--warn{border-left-color:var(--amber);}
+.g-num{font-size:12px;color:var(--ink-4);font-family:var(--font-sans);font-variant-numeric:tabular-nums;width:24px;flex-shrink:0;padding-top:3px;font-weight:600;}
+.g-main{flex:1;min-width:0;}
+.g-top{display:flex;align-items:flex-start;gap:14px;}
+.g-info{flex:1;min-width:0;}
+.g-title{font-size:13px;color:var(--ink);line-height:1.55;font-weight:400;}
+.g-alert{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--amber);font-weight:600;margin-top:4px;font-family:var(--font-sans);}
+.g-path{font-size:10px;color:var(--ink-4);margin-top:4px;font-family:var(--font-sans);}
+.g-stats{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
+.g-days{font-size:10px;font-weight:600;font-family:var(--font-sans);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.g-actions{display:flex;gap:6px;margin-top:10px;}
+.g-btn{padding:6px 12px;border-radius:6px;border:var(--border-thin);background:transparent;color:var(--ink-3);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-sans);display:flex;align-items:center;gap:4px;transition:all 0.15s;white-space:nowrap;}
+.g-btn:hover{background:var(--surface-2);border-color:var(--ink-4);}
 .g-btn--ack{background:var(--amber-light);border-color:var(--amber-muted);color:var(--amber);}
 .g-btn--acked{background:var(--green-light);border-color:var(--green-muted);color:var(--green);}
-.g-btn--detail{margin-left:auto;color:var(--ink-3);}
-@media(min-width:768px){.g-card{padding:20px 24px;}.g-title{font-size:14px;}.g-btn{font-size:12px;padding:8px 14px;}}
-
-/* ═══ Member Cards ═══ */
-.m-card{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:10px;box-shadow:var(--shadow-sm);transition:background 0.3s,border-color 0.3s;}
+.g-btn--detail{margin-left:auto;}
+@media(min-width:768px){.g-row{padding:16px 22px;}.g-title{font-size:14px;}}
+.m-card{background:var(--card);border:var(--border-thin);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:10px;box-shadow:var(--shadow-sm);transition:background 0.4s;}
 .m-card--warn{border-left:3px solid var(--amber);}
 .m-head{padding:14px 18px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.15s;}
 .m-head:hover{background:var(--surface-2);}
 .m-head-left{display:flex;align-items:center;gap:12px;}
-.m-avatar{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0;}
-.m-name{font-size:13px;font-weight:700;color:var(--ink);}
-.m-sub{font-size:10px;color:var(--ink-4);margin-top:1px;}
+.m-name{font-size:14px;font-weight:700;color:var(--ink);font-family:var(--font-sans);}
+.m-sub{font-size:10px;color:var(--ink-4);margin-top:1px;font-family:var(--font-sans);}
 .m-head-right{display:flex;align-items:center;gap:8px;}
-.m-alert-badge{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--amber);font-weight:600;background:var(--amber-light);padding:3px 10px;border-radius:12px;}
-.m-ok-badge{font-size:10px;color:var(--green);font-weight:600;background:var(--green-light);padding:3px 10px;border-radius:12px;}
+.m-alert-badge{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--amber);font-weight:600;background:var(--amber-light);padding:3px 10px;border-radius:12px;font-family:var(--font-sans);}
+.m-ok-badge{font-size:10px;color:var(--green);font-weight:600;background:var(--green-light);padding:3px 10px;border-radius:12px;font-family:var(--font-sans);}
 .m-arrow{color:var(--ink-4);transition:transform 0.2s;display:inline-flex;transform:rotate(90deg);}
 .m-arrow--open{transform:rotate(270deg);}
-.m-body{padding:0 14px 14px;border-top:1px solid var(--surface-3);}
-.m-body .g-card{margin-top:10px;}
-@media(min-width:768px){.m-head{padding:16px 22px;}.m-name{font-size:14px;}}
-
-/* ═══ Summary Grid ═══ */
-.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
-.sum-card{background:var(--surface);border:1px solid var(--surface-3);border-top:3px solid;border-radius:var(--radius);padding:12px 8px;text-align:center;box-shadow:var(--shadow-sm);transition:background 0.3s,border-color 0.3s;}
-.sum-label{font-size:9px;color:var(--ink-3);font-weight:600;margin-bottom:4px;}
-.sum-value{font-size:22px;font-weight:900;line-height:1;}
-@media(min-width:768px){.sum-grid{gap:12px;margin-bottom:24px;}.sum-label{font-size:10px;}.sum-value{font-size:28px;}}
-
-/* ═══ Tree ═══ */
+.m-body{padding:0 14px 14px;border-top:var(--border-thin);}
+@media(min-width:768px){.m-head{padding:16px 22px;}}
+.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;}
+.sum-card{background:var(--card);border:var(--border-thin);border-top:3px solid;border-radius:var(--radius);padding:14px 8px;text-align:center;transition:background 0.4s;}
+.sum-value{font-size:26px;font-weight:300;line-height:1;font-family:var(--font-sans);}
+.sum-label{font-size:8px;color:var(--ink-3);font-weight:600;margin-top:5px;letter-spacing:1px;text-transform:uppercase;font-family:var(--font-sans);}
+@media(min-width:768px){.sum-grid{gap:12px;}.sum-value{font-size:30px;}.sum-label{font-size:9px;}}
 .tree-legend{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px;}
-.legend-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-3);font-weight:500;padding:4px 10px;border-radius:20px;background:var(--surface);border:1px solid var(--surface-3);transition:background 0.3s,border-color 0.3s;}
+.legend-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-3);font-weight:500;padding:4px 10px;border-radius:20px;background:var(--card);border:var(--border-thin);font-family:var(--font-sans);}
 .legend-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.tree-root{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:16px;box-shadow:var(--shadow-sm);transition:background 0.3s,border-color 0.3s;}
+.tree-root{background:var(--card);border:var(--border-thin);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:16px;box-shadow:var(--shadow-sm);transition:background 0.4s;}
 .tree-root-inner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.t-tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;letter-spacing:0.3px;}
-.tree-root-title{font-size:14px;font-weight:800;color:var(--ink);}
-.tree-root-sub{font-size:11px;color:var(--ink-4);margin-left:auto;}
-.tree-container{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:14px;box-shadow:var(--shadow-sm);transition:background 0.3s,border-color 0.3s;}
-.tr-node{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;border-left:2px solid transparent;margin-bottom:2px;}
-.tr-node--parent{cursor:pointer;}
-.tr-node--parent:hover{background:var(--surface-2);}
+.t-tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:4px;letter-spacing:0.3px;font-family:var(--font-sans);}
+.tree-root-title{font-size:14px;font-weight:800;color:var(--ink);font-family:var(--font-sans);}
+.tree-root-sub{font-size:11px;color:var(--ink-4);margin-left:auto;font-family:var(--font-sans);}
+.tree-container{background:var(--card);border:var(--border-thin);border-radius:var(--radius-lg);padding:14px;box-shadow:var(--shadow-sm);transition:background 0.4s;}
+.tr-node{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:var(--radius);border-left:2px solid transparent;margin-bottom:2px;font-family:var(--font-sans);}
+.tr-node--parent{cursor:pointer;}.tr-node--parent:hover{background:var(--surface-2);}
 .tr-node--leaf{background:var(--surface-2);border-left-width:3px;}
-.tr-arrow{color:var(--ink-4);transition:transform 0.2s;display:inline-flex;}
-.tr-arrow--open{transform:rotate(90deg);}
+.tr-arrow{color:var(--ink-4);transition:transform 0.2s;display:inline-flex;}.tr-arrow--open{transform:rotate(90deg);}
 .tr-leaf-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
 .tr-title{flex:1;font-size:12px;color:var(--ink);line-height:1.5;min-width:0;}
 .tr-progress{font-size:9px;font-weight:700;color:var(--ink-3);font-variant-numeric:tabular-nums;}
-.tr-status{font-size:9px;font-weight:700;padding:1px 6px;border-radius:6px;}
+.tr-status{font-size:9px;font-weight:700;padding:1px 6px;border-radius:4px;}
 .tr-owner{font-size:9px;color:var(--ink-4);white-space:nowrap;flex-shrink:0;}
-@media(min-width:768px){.tr-title{font-size:13px;}}
-
-/* ═══ Path Modal ═══ */
-.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;}
-.modal{background:var(--surface);border-radius:16px;padding:24px;max-width:460px;width:100%;box-shadow:var(--shadow-lg);animation:fadeIn 0.25s ease;transition:background 0.3s;}
+.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(42,36,24,0.25);backdrop-filter:blur(4px);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal{background:var(--card);border-radius:var(--radius-lg);padding:24px;max-width:460px;width:100%;box-shadow:var(--shadow-lg);animation:fadeIn 0.25s ease;border:var(--border-thin);transition:background 0.4s;}
 .modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
-.modal-title{font-size:16px;font-weight:800;color:var(--ink);}
-.modal-sub{font-size:11px;color:var(--ink-4);margin-top:2px;}
-.modal-close{background:none;border:none;color:var(--ink-4);cursor:pointer;padding:4px;border-radius:6px;}
-.modal-close:hover{background:var(--surface-2);}
+.modal-title{font-size:16px;font-weight:800;color:var(--ink);font-family:var(--font-sans);}
+.modal-sub{font-size:11px;color:var(--ink-4);margin-top:2px;font-family:var(--font-sans);}
+.modal-close{background:none;border:none;color:var(--ink-4);cursor:pointer;padding:4px;border-radius:6px;}.modal-close:hover{background:var(--surface-2);}
 .path-list{display:flex;flex-direction:column;}
-.path-item{display:flex;}
-.path-rail{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0;}
+.path-item{display:flex;}.path-rail{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0;}
 .path-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:10px;}
 .path-line{flex:1;width:1.5px;background:var(--surface-3);margin:3px 0;}
-.path-body{flex:1;padding:8px 14px;margin-left:8px;margin-bottom:8px;border-radius:8px;background:var(--surface-2);border:1px solid var(--surface-3);transition:background 0.3s,border-color 0.3s;}
+.path-body{flex:1;padding:8px 14px;margin-left:8px;margin-bottom:8px;border-radius:var(--radius);background:var(--surface-2);border:var(--border-thin);transition:background 0.4s;}
 .path-body--leaf{background:var(--green-light);border-color:var(--green-muted);}
-.path-label{font-size:9px;font-weight:700;display:block;margin-bottom:2px;}
+.path-label{font-size:9px;font-weight:700;display:block;margin-bottom:2px;font-family:var(--font-sans);}
 .path-text{font-size:13px;color:var(--ink);font-weight:500;line-height:1.5;}
 .path-body--leaf .path-text{color:var(--green);font-weight:700;}
-
-/* ═══ LINE Phone Mockup（常にライトテーマ） ═══ */
 .phone-wrap{display:flex;justify-content:center;padding:10px 0;}
-.phone-frame{width:320px;background:#8FBCBB;border-radius:40px;border:5px solid #1a1a1a;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.25),0 4px 12px rgba(0,0,0,0.12);position:relative;}
+.phone-frame{width:320px;background:#8FBCBB;border-radius:40px;border:5px solid #1a1a1a;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);position:relative;}
 @media(min-width:768px){.phone-frame{width:360px;}}
 .phone-status{display:flex;align-items:center;justify-content:space-between;padding:12px 24px 6px;font-size:13px;font-weight:700;color:#1a1a1a;position:relative;}
-.phone-time{font-variant-numeric:tabular-nums;}
-.phone-island{width:90px;height:24px;border-radius:20px;background:#1a1a1a;position:absolute;left:50%;transform:translateX(-50%);top:8px;}
-.phone-status-icons{display:flex;align-items:center;gap:5px;color:#1a1a1a;}
-.phone-battery{width:20px;height:10px;border:1.2px solid #1a1a1a;border-radius:2px;position:relative;}
-.phone-battery::after{content:'';position:absolute;right:-3px;top:2.5px;width:1.5px;height:4px;background:#1a1a1a;border-radius:0 1px 1px 0;}
-.phone-battery-fill{width:75%;height:100%;background:#1a1a1a;border-radius:1px;}
-.line-nav{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(78,130,95,0.85);backdrop-filter:blur(12px);}
-.line-nav-back{padding:4px 6px;}
-.line-nav-name{font-size:15px;font-weight:700;color:#fff;text-align:center;flex:1;}
+.phone-time{font-variant-numeric:tabular-nums;}.phone-island{width:90px;height:24px;border-radius:20px;background:#1a1a1a;position:absolute;left:50%;transform:translateX(-50%);top:8px;}
+.phone-status-right{display:flex;align-items:center;gap:5px;}
+.phone-battery{width:20px;height:10px;border:1.2px solid #1a1a1a;border-radius:2px;position:relative;}.phone-battery::after{content:'';position:absolute;right:-3px;top:2.5px;width:1.5px;height:4px;background:#1a1a1a;border-radius:0 1px 1px 0;}.phone-battery-fill{width:75%;height:100%;background:#1a1a1a;border-radius:1px;}
+.line-nav{display:flex;align-items:center;padding:10px 14px;background:rgba(78,130,95,0.85);backdrop-filter:blur(12px);}
+.line-nav-left{padding:4px 6px;flex-shrink:0;}.line-nav-center{flex:1;text-align:center;}.line-nav-name{font-size:15px;font-weight:700;color:#fff;}
 .line-chat{background:linear-gradient(170deg,#8FBCBB 0%,#7EB0A8 30%,#6DA47E 100%);min-height:380px;padding:10px 10px 6px;}
-.line-date-pill{display:block;width:fit-content;margin:6px auto 14px;font-size:10px;color:rgba(255,255,255,0.7);background:rgba(0,0,0,0.12);padding:3px 12px;border-radius:12px;text-align:center;}
+.line-date-pill{display:block;width:fit-content;margin:6px auto 14px;font-size:10px;color:rgba(255,255,255,0.7);background:rgba(0,0,0,0.12);padding:3px 12px;border-radius:12px;}
 .line-msg-row{display:flex;align-items:flex-start;gap:8px;}
-.line-avatar-circle{width:32px;height:32px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#5a8a6a,#4a7a5a);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,0.15);}
-.line-msg-col{flex:1;min-width:0;}
-.line-sender{font-size:10px;color:rgba(255,255,255,0.65);margin-bottom:3px;margin-left:2px;}
-.line-bubble-wrap{display:flex;align-items:flex-end;gap:5px;}
-.line-bubble-body{background:#fff;border-radius:0 16px 16px 16px;padding:14px;font-size:12.5px;color:#1a1a1a;line-height:1.6;box-shadow:0 1px 4px rgba(0,0,0,0.06);flex:1;min-width:0;}
-.line-read-time{display:flex;flex-direction:column;align-items:flex-end;font-size:9px;color:rgba(255,255,255,0.55);white-space:nowrap;flex-shrink:0;gap:1px;padding-bottom:2px;}
-.line-read{color:rgba(255,255,255,0.45);font-size:8px;}
+.line-avatar-circle{width:32px;height:32px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#5a8a6a,#4a7a5a);display:flex;align-items:center;justify-content:center;}
+.line-msg-col{flex:1;min-width:0;}.line-sender{font-size:10px;color:rgba(255,255,255,0.65);margin-bottom:3px;margin-left:2px;}
+.line-bubble-wrap{display:flex;align-items:flex-end;gap:5px;}.line-bubble-body{background:#fff;border-radius:0 16px 16px 16px;padding:14px;font-size:12.5px;color:#1a1a1a;line-height:1.6;box-shadow:0 1px 4px rgba(0,0,0,0.06);flex:1;}
+.line-read-time{display:flex;flex-direction:column;align-items:flex-end;font-size:9px;color:rgba(255,255,255,0.55);white-space:nowrap;gap:1px;padding-bottom:2px;}.line-read{color:rgba(255,255,255,0.45);font-size:8px;}
 .line-input-bar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,0.92);border-top:1px solid rgba(0,0,0,0.06);}
 .line-input-plus{width:28px;height:28px;border-radius:50%;background:#e8e8e6;color:#888;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:300;flex-shrink:0;}
 .line-input-field{flex:1;padding:7px 14px;border-radius:20px;background:#f0f0ee;font-size:12px;color:#bbb;}
-.phone-home-bar{padding:6px 0 10px;background:rgba(255,255,255,0.92);display:flex;justify-content:center;}
-.phone-home-indicator{width:100px;height:4px;border-radius:4px;background:rgba(0,0,0,0.2);}
-
-.line-section-label{text-align:center;font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:8px;}
-
-/* LINE Bubble Content（常にライト色） */
+.phone-home-bar{padding:6px 0 10px;background:rgba(255,255,255,0.92);display:flex;justify-content:center;}.phone-home-indicator{width:100px;height:4px;border-radius:4px;background:rgba(0,0,0,0.2);}
+.line-section-label{text-align:center;font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:8px;font-family:var(--font-sans);}
 .lb-head{font-weight:700;font-size:14px;color:#1a1a1a;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eee;}
 .lb-greet{font-size:12px;color:#888;margin-bottom:10px;}
-.lb-item{padding:8px 10px;background:#f8f8f6;border-radius:8px;margin-bottom:6px;border-left:3px solid #1a7a42;}
-.lb-item--warn{border-left-color:#b8860b;background:#fef9ee;}
-.lb-item-title{font-size:12px;font-weight:500;color:#1a1a1a;}
-.lb-item-meta{font-size:10px;color:#999;margin-top:3px;}
-.lb-item-alert{color:#b8860b;font-weight:600;}
-.lb-more{font-size:10px;color:#bbb;text-align:center;margin:8px 0;}
-.lb-suggest{background:#f8f6ff;border-radius:8px;padding:10px;margin-bottom:10px;border-left:3px solid #6b5ec4;}
-.lb-suggest-label{font-size:10px;color:#6b5ec4;font-weight:700;margin-bottom:2px;}
-.lb-suggest-text{font-size:11px;color:#555;line-height:1.5;}
-.lb-btns{display:flex;gap:5px;}
-.lb-btn{flex:1;text-align:center;padding:8px 0;border-radius:8px;background:#f0f0ee;color:#666;font-size:11px;font-weight:600;}
-.lb-btn--primary{background:#4a7048;color:#fff;}
-
-/* LINE compact item */
-.lb-line-item{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:5px 8px;background:#f8f8f6;border-radius:6px;margin-bottom:3px;border-left:3px solid #1a7a42;}
+.lb-line-item{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:5px 8px;background:#f8f8f6;border-radius:6px;margin-bottom:3px;border-left:3px solid #3a8a48;}
 .lb-line-item--warn{border-left-color:#b8860b;background:#fef9ee;}
 .lb-line-title{font-size:11px;font-weight:500;color:#1a1a1a;flex:1;min-width:0;line-height:1.5;}
 .lb-line-days{font-size:9px;font-weight:700;white-space:nowrap;flex-shrink:0;font-variant-numeric:tabular-nums;}
-
-/* LINE Member Summary Row */
-.lb-member-row{padding:6px 8px;background:#f8f8f6;border-radius:6px;margin-bottom:4px;border-left:3px solid #1a7a42;}
+.lb-suggest{background:#f8f6ff;border-radius:8px;padding:10px;margin-bottom:10px;border-left:3px solid #6b5ec4;}
+.lb-suggest-label{font-size:10px;color:#6b5ec4;font-weight:700;margin-bottom:2px;}
+.lb-suggest-text{font-size:11px;color:#555;line-height:1.5;}
+.lb-btns{display:flex;gap:5px;}.lb-btn{flex:1;text-align:center;padding:8px 0;border-radius:8px;background:#f0f0ee;color:#666;font-size:11px;font-weight:600;}.lb-btn--primary{background:#4a7048;color:#fff;}
+.lb-member-row{padding:6px 8px;background:#f8f8f6;border-radius:6px;margin-bottom:4px;border-left:3px solid #3a8a48;}
 .lb-member-row--warn{border-left-color:#b8860b;background:#fef9ee;}
 .lb-member-name{font-size:11px;font-weight:700;color:#1a1a1a;}
 .lb-member-stats{display:flex;align-items:center;gap:8px;font-size:10px;color:#999;margin-top:2px;}
-.lb-member-alert{color:#b8860b;font-weight:600;}
-.lb-member-ok{color:#1a7a42;font-weight:600;}
-.lb-member-detail{margin-top:3px;padding-left:4px;}
-.lb-member-issue{font-size:9px;color:#b8860b;line-height:1.5;}
-
-/* ═══ Help Trigger Button ═══ */
-.help-trigger{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;border:1px solid var(--surface-3);background:var(--surface-2);cursor:pointer;color:var(--ink-3);transition:all 0.15s;flex-shrink:0;}
-.help-trigger:hover{border-color:var(--ink-5);background:var(--surface-3);color:var(--ink);}
-
-/* ═══ Help Modal ═══ */
-.help-modal{background:var(--surface);border-radius:20px;max-width:520px;width:100%;max-height:85vh;box-shadow:var(--shadow-lg);animation:fadeIn 0.25s ease;transition:background 0.3s;display:flex;flex-direction:column;overflow:hidden;}
-.help-modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid var(--surface-3);}
-.help-modal-title{font-size:17px;font-weight:800;color:var(--ink);}
-.help-tabs{display:flex;gap:2px;padding:12px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid var(--surface-3);flex-shrink:0;}
-.help-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:10px;border:none;background:transparent;cursor:pointer;font-family:var(--font);transition:all 0.15s;flex-shrink:0;min-width:64px;}
+.lb-member-alert{color:#b8860b;font-weight:600;}.lb-member-ok{color:#3a8a48;font-weight:600;}
+.lb-member-detail{margin-top:3px;padding-left:4px;}.lb-member-issue{font-size:9px;color:#b8860b;line-height:1.5;}
+.footer{border-top:var(--border-thick);padding:16px 0;transition:border-color 0.4s;}
+.footer-inner{display:flex;justify-content:space-between;font-size:9px;color:var(--ink-4);letter-spacing:2px;font-family:var(--font-sans);}
+.help-modal{background:var(--card);border-radius:var(--radius-lg);max-width:520px;width:100%;max-height:85vh;box-shadow:var(--shadow-lg);animation:fadeIn 0.25s ease;display:flex;flex-direction:column;overflow:hidden;border:var(--border-thin);transition:background 0.4s;}
+.help-modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:var(--border-thin);}
+.help-modal-title{font-size:17px;font-weight:800;color:var(--ink);font-family:var(--font-sans);}
+.help-tabs{display:flex;gap:2px;padding:12px 16px;overflow-x:auto;border-bottom:var(--border-thin);flex-shrink:0;}
+.help-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:8px;border:none;background:transparent;cursor:pointer;font-family:var(--font-sans);transition:all 0.15s;flex-shrink:0;min-width:64px;}
 .help-tab:hover{background:var(--surface-2);}
-.help-tab--active{background:var(--green-light);box-shadow:inset 0 0 0 1px var(--green-muted);}
+.help-tab--active{background:var(--accent-light);box-shadow:inset 0 0 0 1px var(--accent-muted);}
 .help-tab-icon{font-size:18px;line-height:1;}
 .help-tab-label{font-size:9px;font-weight:600;color:var(--ink-3);white-space:nowrap;line-height:1.2;}
-.help-tab--active .help-tab-label{color:var(--green);font-weight:700;}
-.help-content{flex:1;overflow-y:auto;padding:20px 24px;-webkit-overflow-scrolling:touch;}
-.help-section{}
+.help-tab--active .help-tab-label{color:var(--accent);font-weight:700;}
+.help-content{flex:1;overflow-y:auto;padding:20px 24px;}
 .help-text{font-size:13px;color:var(--ink-2);line-height:1.75;}
-.help-box{background:var(--surface-2);border:1px solid var(--surface-3);border-radius:12px;padding:14px 16px;transition:background 0.3s,border-color 0.3s;}
-.help-box-title{font-size:11px;font-weight:800;color:var(--ink-3);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;}
+.help-box{background:var(--surface-2);border:var(--border-thin);border-radius:var(--radius);padding:14px 16px;transition:background 0.4s;}
+.help-box-title{font-size:11px;font-weight:800;color:var(--ink-3);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;font-family:var(--font-sans);}
 .help-box-item{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--ink-2);line-height:1.6;padding:5px 0;}
 .help-box-item+.help-box-item{border-top:1px solid var(--surface-3);}
-.help-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;background:var(--surface-3);color:var(--ink-2);white-space:nowrap;flex-shrink:0;}
-.help-chip{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.help-badge{display:inline-flex;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:var(--surface-3);color:var(--ink-2);white-space:nowrap;flex-shrink:0;font-family:var(--font-sans);}
+.help-chip{display:inline-flex;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;font-family:var(--font-sans);}
 .help-chip--amber{background:var(--amber-light);color:var(--amber);}
 .help-chip--red{background:var(--red-light);color:var(--red);}
 .help-note{font-size:11px;color:var(--ink-4);margin-top:8px;font-style:italic;}
-.help-footer{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-top:1px solid var(--surface-3);flex-shrink:0;}
+.help-footer{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-top:var(--border-thin);flex-shrink:0;}
 .help-dots{display:flex;gap:6px;}
 .help-dot{width:7px;height:7px;border-radius:50%;background:var(--surface-3);cursor:pointer;transition:all 0.15s;}
-.help-dot--active{background:var(--green);transform:scale(1.2);}
+.help-dot--active{background:var(--accent);transform:scale(1.2);}
 .help-nav-btns{display:flex;gap:8px;}
-.help-nav-btn{padding:7px 16px;border-radius:8px;border:1px solid var(--surface-3);background:var(--surface);color:var(--ink-2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all 0.15s;}
-.help-nav-btn:hover{background:var(--surface-2);border-color:var(--ink-5);}
-.help-nav-btn--primary{background:var(--green);color:#fff;border-color:var(--green);}
+.help-nav-btn{padding:7px 16px;border-radius:6px;border:var(--border-thin);background:transparent;color:var(--ink-2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:all 0.15s;}
+.help-nav-btn:hover{background:var(--surface-2);border-color:var(--ink-4);}
+.help-nav-btn--primary{background:var(--accent);color:#fff;border-color:var(--accent);}
 .help-nav-btn--primary:hover{opacity:0.9;}
 </style>
 </body>
