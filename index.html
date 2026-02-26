@@ -220,6 +220,7 @@ const Icon={
   moon:p=><svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...p}><path d="M13.5 8.5a5.5 5.5 0 01-6-6 5.5 5.5 0 106 6z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   sortAsc:p=><svg width="12" height="12" viewBox="0 0 12 12" fill="none" {...p}><path d="M6 2V10M6 2L3 5M6 2L9 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   sortDesc:p=><svg width="12" height="12" viewBox="0 0 12 12" fill="none" {...p}><path d="M6 10V2M6 10L3 7M6 10L9 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  help:p=><svg width="16" height="16" viewBox="0 0 16 16" fill="none" {...p}><circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.3"/><path d="M6 6.2a2 2 0 013.5 1.3c0 1.3-2 1.3-2 2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/><circle cx="7.5" cy="12" r="0.7" fill="currentColor"/></svg>,
 };
 
 /* ─── 進捗バー + 残日数 ─── */
@@ -420,6 +421,156 @@ function DarkModeSwitch({dark, onToggle}){
   );
 }
 
+/* ─── ヘルプガイド（マネージャー版） ─── */
+function HelpGuide({show,onClose}){
+  const [section,setSection]=useState(0);
+  if(!show) return null;
+
+  const sections = [
+    {
+      title: "このアプリについて",
+      icon: "🎯",
+      content: (
+        <div className="help-section">
+          <p className="help-text">
+            <strong>フォーカスゴール</strong>は、ゴールツリーの末端（＝これ以上分解されていない具体的なゴール）を一覧し、自分と直下メンバーの進捗を管理するアプリです。
+          </p>
+          <div className="help-box">
+            <div className="help-box-title">4つの画面</div>
+            <div className="help-box-item"><span className="help-badge">今日のゴール</span>自分のフォーカスゴールをカード形式で一覧</div>
+            <div className="help-box-item"><span className="help-badge">メンバー管理</span>直下メンバーのゴール状況を確認・管理</div>
+            <div className="help-box-item"><span className="help-badge">ゴールツリー</span>チーム全体の階層構造を表示</div>
+            <div className="help-box-item"><span className="help-badge">LINE通知</span>毎朝届くLINE通知のプレビュー</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "ゴールカードの見方",
+      icon: "📋",
+      content: (
+        <div className="help-section">
+          <div className="help-box">
+            <div className="help-box-title">カード内の情報</div>
+            <div className="help-box-item"><span className="help-badge" style={{background:'var(--green-light)',color:'var(--green)'}}>タイトル</span>フォーカスゴールの名前</div>
+            <div className="help-box-item"><span className="help-badge" style={{background:'var(--surface-3)',color:'var(--ink-3)'}}>01/30 → 03/15</span>設定日 → 期限日</div>
+            <div className="help-box-item"><span className="help-badge" style={{background:'var(--blue-light)',color:'var(--blue)'}}>進捗バー</span>現在の進捗率（%）</div>
+            <div className="help-box-item"><span className="help-badge" style={{background:'var(--amber-light)',color:'var(--amber)'}}>残○日 / ○日超過</span>期限までの残日数（超過時は赤表示）</div>
+          </div>
+          <div className="help-box" style={{marginTop:12}}>
+            <div className="help-box-title">注意マーク（⚠️）の意味</div>
+            <div className="help-box-item"><span className="help-chip help-chip--amber">○日間更新なし</span>長期間進捗が更新されていない</div>
+            <div className="help-box-item"><span className="help-chip help-chip--amber">粒度が粗い</span>もう少し具体的に分解できる可能性</div>
+            <div className="help-box-item"><span className="help-chip help-chip--red">期限超過</span>期限を過ぎている</div>
+            <div className="help-box-item"><span className="help-chip help-chip--amber">ペース遅れ</span>残り期間に対して進捗が遅い</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "メンバー管理",
+      icon: "👥",
+      content: (
+        <div className="help-section">
+          <p className="help-text">直下メンバーのフォーカスゴールを一括確認できるマネージャー専用画面です。</p>
+          <div className="help-box" style={{marginTop:10}}>
+            <div className="help-box-title">画面の構成</div>
+            <div className="help-box-item"><span className="help-badge" style={{background:'var(--amber-light)',color:'var(--amber)'}}>注意サマリー</span>AIが検知したチーム全体の注意点</div>
+            <div className="help-box-item"><span className="help-badge">サマリーグリッド</span>フォーカスゴール数・注意項目数・更新なし数・粒度確認数</div>
+            <div className="help-box-item"><span className="help-badge">メンバーカード</span>各メンバーのゴールを展開して確認</div>
+          </div>
+          <div className="help-box" style={{marginTop:12}}>
+            <div className="help-box-title">メンバーカードの操作</div>
+            <div className="help-box-item"><span className="help-badge">カードをタップ</span>メンバーのゴール一覧を展開/折りたたみ</div>
+            <div className="help-box-item"><span className="help-badge">期限順 / 進捗順</span>展開時、メンバーごとにソート可能</div>
+            <div className="help-box-item"><span className="help-badge" style={{background:'var(--amber-light)',color:'var(--amber)'}}>確認する</span>注意項目を確認済みにする（トグル）</div>
+            <div className="help-box-item"><span className="help-badge">パス照会</span>上位ゴールからの経路を確認</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "操作ガイド",
+      icon: "🔧",
+      content: (
+        <div className="help-section">
+          <div className="help-box">
+            <div className="help-box-title">ソート（並び替え）</div>
+            <div className="help-box-item"><span className="help-badge">期限順 ↑↓</span>期限が近い順 / 遠い順</div>
+            <div className="help-box-item"><span className="help-badge">進捗順 ↑↓</span>進捗が低い順 / 高い順</div>
+            <p className="help-note">同じボタンをタップすると昇順 ↔ 降順を切り替えます</p>
+          </div>
+          <div className="help-box" style={{marginTop:12}}>
+            <div className="help-box-title">ヘッダーの数値</div>
+            <div className="help-box-item"><span className="help-badge">自分</span>自分のフォーカスゴール件数</div>
+            <div className="help-box-item"><span className="help-badge">直下</span>直下メンバーの人数</div>
+            <div className="help-box-item"><span className="help-badge" style={{background:'var(--amber-light)',color:'var(--amber)'}}>注意項目</span>チーム全体の注意すべきゴール件数</div>
+          </div>
+          <div className="help-box" style={{marginTop:12}}>
+            <div className="help-box-title">その他の機能</div>
+            <div className="help-box-item"><span className="help-badge">🌙 ダークモード</span>ヘッダー右の月/太陽アイコンで切替</div>
+            <div className="help-box-item"><span className="help-badge">注目ポイント</span>AIが自動検知した今日注力すべき項目</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "ツリー / LINE",
+      icon: "🌲",
+      content: (
+        <div className="help-section">
+          <div className="help-box">
+            <div className="help-box-title">ゴールツリー</div>
+            <div className="help-box-item"><span className="help-chip" style={{background:'var(--green-light)',color:'var(--green)'}}>順調</span>進捗に問題なし</div>
+            <div className="help-box-item"><span className="help-chip" style={{background:'var(--amber-light)',color:'var(--amber)'}}>注意</span>期限超過・更新なし・粒度粗いなど</div>
+            <p className="help-note" style={{marginTop:6}}>親ノードをタップで展開/折りたたみ</p>
+          </div>
+          <div className="help-box" style={{marginTop:12}}>
+            <div className="help-box-title">LINE通知</div>
+            <p className="help-text">毎朝 9:50 に届くLINE通知のプレビューです。マネージャーには2種類届きます。</p>
+            <div className="help-box-item"><span className="help-badge">自分の通知</span>自分のフォーカスゴール一覧＋注目ポイント</div>
+            <div className="help-box-item"><span className="help-badge">メンバーサマリー</span>直下メンバーの件数・注意件数の概要</div>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
+  return(
+    <div className="overlay" onClick={onClose}>
+      <div className="help-modal" onClick={e=>e.stopPropagation()}>
+        <div className="help-modal-head">
+          <div className="help-modal-title">使い方ガイド</div>
+          <button className="modal-close" onClick={onClose}><Icon.close/></button>
+        </div>
+        <div className="help-tabs">
+          {sections.map((s,i)=>(
+            <button key={i} className={"help-tab"+(section===i?" help-tab--active":"")} onClick={()=>setSection(i)}>
+              <span className="help-tab-icon">{s.icon}</span>
+              <span className="help-tab-label">{s.title}</span>
+            </button>
+          ))}
+        </div>
+        <div className="help-content">
+          {sections[section].content}
+        </div>
+        <div className="help-footer">
+          <div className="help-dots">
+            {sections.map((_,i)=><span key={i} className={"help-dot"+(section===i?" help-dot--active":"")} onClick={()=>setSection(i)}/>)}
+          </div>
+          <div className="help-nav-btns">
+            {section>0 && <button className="help-nav-btn" onClick={()=>setSection(s=>s-1)}>← 前へ</button>}
+            {section<sections.length-1
+              ? <button className="help-nav-btn help-nav-btn--primary" onClick={()=>setSection(s=>s+1)}>次へ →</button>
+              : <button className="help-nav-btn help-nav-btn--primary" onClick={onClose}>閉じる</button>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ═══ メインApp ═══ */
 function App(){
   const[tab,setTab]=useState("mygoals");
@@ -427,6 +578,7 @@ function App(){
   const[members,setMembers]=useState(MEMBERS);
   const[pathGoal,setPathGoal]=useState(null);
   const[dark,setDark]=useState(false);
+  const[showHelp,setShowHelp]=useState(false);
   const toggleDark=useCallback(()=>{
     setDark(d=>{
       document.documentElement.setAttribute('data-theme',d?'light':'dark');
@@ -484,6 +636,7 @@ function App(){
   return(
     <div className="app">
       <PathPopup show={pathGoal!==null} goal={pathGoal} onClose={()=>setPathGoal(null)}/>
+      <HelpGuide show={showHelp} onClose={()=>setShowHelp(false)}/>
 
       <header className="header">
         <div className="container header-inner">
@@ -500,6 +653,7 @@ function App(){
             <div className="header-stat-divider"/>
             <div className="header-stat"><span className="header-stat-num" style={{color:attentionCount>0?'var(--amber)':'var(--green)'}}>{attentionCount}</span><span className="header-stat-label">注意項目</span></div>
             <DarkModeSwitch dark={dark} onToggle={toggleDark}/>
+            <button className="help-trigger" onClick={()=>setShowHelp(true)} title="使い方ガイド"><Icon.help/></button>
             <div className="header-date">{TODAY_DISPLAY}</div>
           </div>
         </div>
@@ -840,6 +994,43 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 .lb-member-ok{color:#1a7a42;font-weight:600;}
 .lb-member-detail{margin-top:3px;padding-left:4px;}
 .lb-member-issue{font-size:9px;color:#b8860b;line-height:1.5;}
+
+/* ═══ Help Trigger Button ═══ */
+.help-trigger{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;border:1px solid var(--surface-3);background:var(--surface-2);cursor:pointer;color:var(--ink-3);transition:all 0.15s;flex-shrink:0;}
+.help-trigger:hover{border-color:var(--ink-5);background:var(--surface-3);color:var(--ink);}
+
+/* ═══ Help Modal ═══ */
+.help-modal{background:var(--surface);border-radius:20px;max-width:520px;width:100%;max-height:85vh;box-shadow:var(--shadow-lg);animation:fadeIn 0.25s ease;transition:background 0.3s;display:flex;flex-direction:column;overflow:hidden;}
+.help-modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid var(--surface-3);}
+.help-modal-title{font-size:17px;font-weight:800;color:var(--ink);}
+.help-tabs{display:flex;gap:2px;padding:12px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid var(--surface-3);flex-shrink:0;}
+.help-tab{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:10px;border:none;background:transparent;cursor:pointer;font-family:var(--font);transition:all 0.15s;flex-shrink:0;min-width:64px;}
+.help-tab:hover{background:var(--surface-2);}
+.help-tab--active{background:var(--green-light);box-shadow:inset 0 0 0 1px var(--green-muted);}
+.help-tab-icon{font-size:18px;line-height:1;}
+.help-tab-label{font-size:9px;font-weight:600;color:var(--ink-3);white-space:nowrap;line-height:1.2;}
+.help-tab--active .help-tab-label{color:var(--green);font-weight:700;}
+.help-content{flex:1;overflow-y:auto;padding:20px 24px;-webkit-overflow-scrolling:touch;}
+.help-section{}
+.help-text{font-size:13px;color:var(--ink-2);line-height:1.75;}
+.help-box{background:var(--surface-2);border:1px solid var(--surface-3);border-radius:12px;padding:14px 16px;transition:background 0.3s,border-color 0.3s;}
+.help-box-title{font-size:11px;font-weight:800;color:var(--ink-3);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;}
+.help-box-item{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--ink-2);line-height:1.6;padding:5px 0;}
+.help-box-item+.help-box-item{border-top:1px solid var(--surface-3);}
+.help-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;background:var(--surface-3);color:var(--ink-2);white-space:nowrap;flex-shrink:0;}
+.help-chip{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.help-chip--amber{background:var(--amber-light);color:var(--amber);}
+.help-chip--red{background:var(--red-light);color:var(--red);}
+.help-note{font-size:11px;color:var(--ink-4);margin-top:8px;font-style:italic;}
+.help-footer{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-top:1px solid var(--surface-3);flex-shrink:0;}
+.help-dots{display:flex;gap:6px;}
+.help-dot{width:7px;height:7px;border-radius:50%;background:var(--surface-3);cursor:pointer;transition:all 0.15s;}
+.help-dot--active{background:var(--green);transform:scale(1.2);}
+.help-nav-btns{display:flex;gap:8px;}
+.help-nav-btn{padding:7px 16px;border-radius:8px;border:1px solid var(--surface-3);background:var(--surface);color:var(--ink-2);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all 0.15s;}
+.help-nav-btn:hover{background:var(--surface-2);border-color:var(--ink-5);}
+.help-nav-btn--primary{background:var(--green);color:#fff;border-color:var(--green);}
+.help-nav-btn--primary:hover{opacity:0.9;}
 </style>
 </body>
 </html>
