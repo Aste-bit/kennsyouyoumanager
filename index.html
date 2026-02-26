@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
 <title>フォーカスゴール — 三上大慈</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -301,9 +302,22 @@ function GoalCard({goal,onConfirm,onPath,delay=0}){
 function MemberCard({name,goals,onConfirm,onPath,delay=0}){
   const[open,setOpen]=useState(false);
   const[vis,setVis]=useState(false);
+  const[sortBy,setSortBy]=useState('deadline');
+  const[sortDir,setSortDir]=useState('asc');
   useEffect(()=>{const t=setTimeout(()=>setVis(true),delay);return()=>clearTimeout(t);},[delay]);
   const alerts=goals.filter(g=>g.alertKey).length;
   const avgProgress=goals.length>0?Math.round(goals.reduce((s,g)=>s+(g.progress||0),0)/goals.length):0;
+  const toggleSort=field=>{if(sortBy===field){setSortDir(d=>d==='asc'?'desc':'asc');}else{setSortBy(field);setSortDir('asc');}};
+  const sortedGoals=useMemo(()=>{
+    const arr=[...goals];
+    arr.sort((a,b)=>{
+      let v;
+      if(sortBy==='deadline'){const ra=calcRemainingDays(a.deadline)??999,rb=calcRemainingDays(b.deadline)??999;v=ra-rb;}
+      else{v=(a.progress||0)-(b.progress||0);}
+      return sortDir==='asc'?v:-v;
+    });
+    return arr;
+  },[goals,sortBy,sortDir]);
   return(
     <div className={"m-card"+(alerts>0?" m-card--warn":"")} style={{opacity:vis?1:0,transform:vis?"translateY(0)":"translateY(8px)",transition:"opacity 0.4s ease, transform 0.4s ease"}}>
       <div className="m-head" onClick={()=>setOpen(!open)}>
@@ -322,7 +336,15 @@ function MemberCard({name,goals,onConfirm,onPath,delay=0}){
       </div>
       {open&&(
         <div className="m-body">
-          {goals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={onConfirm} onPath={onPath} delay={i*50}/>)}
+          <div className="sort-bar">
+            <button className={"sort-btn"+(sortBy==='deadline'?" sort-btn--active":"")} onClick={()=>toggleSort('deadline')}>
+              期限順 {sortBy==='deadline'&&(sortDir==='asc'?<Icon.sortAsc/>:<Icon.sortDesc/>)}
+            </button>
+            <button className={"sort-btn"+(sortBy==='progress'?" sort-btn--active":"")} onClick={()=>toggleSort('progress')}>
+              進捗順 {sortBy==='progress'&&(sortDir==='asc'?<Icon.sortAsc/>:<Icon.sortDesc/>)}
+            </button>
+          </div>
+          {sortedGoals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={onConfirm} onPath={onPath} delay={i*50}/>)}
         </div>
       )}
     </div>
