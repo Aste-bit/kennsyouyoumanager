@@ -35,85 +35,112 @@ body{font-family:var(--font);background:var(--surface-2);color:var(--ink);min-he
 <script type="text/babel">
 const {useState,useEffect,useCallback,useMemo} = React;
 
+/* ═══ アラート文言の2トーン定義 ═══ */
+const ALERT_TONES = {
+  soft: {
+    stale: "しばらく更新がありません",
+    granularity: "もう少し具体的にできるかも",
+    overdue: "期限を過ぎています",
+    pace: "ペースが少しゆっくりです",
+    noGoal: "ゴールが未設定です",
+  },
+  factual: {
+    stale: "長期停滞の可能性",
+    granularity: "粒度が粗い（AI判定）",
+    overdue: "期限超過",
+    pace: "進捗ペース注意",
+    noGoal: "ゴール未設定",
+  }
+};
+function getAlertText(alertKey, tone) {
+  if (!alertKey) return '';
+  return ALERT_TONES[tone]?.[alertKey] || alertKey;
+}
+
+/* ═══ ユーティリティ ═══ */
+function calcDays(d){return d?Math.ceil((new Date("2026-02-25")-new Date(d))/86400000):0;}
+function calcRemainingDays(d){return d?Math.ceil((new Date(d)-new Date("2026-02-25"))/86400000):null;}
+function formatShortDate(d){return d?d.slice(5).replace('-','/'):'';}
+
 /* ═══ 三上大慈 自身のゴール ═══ */
 const MY_GOALS = [
-  { id:1,title:"【緊急】コスト削減施策をきっちりと回し切る",setDate:"2026-01-22",status:"on_track",alert:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る"]},
-  { id:2,title:"ガバナンスの運用",setDate:"2026-01-31",status:"on_track",alert:"",path:["コーポレート部の健全性担保","組織管理基盤","ガバナンスの運用"]},
-  { id:3,title:"チームの全員のゴールの健全性を担保する",setDate:"2026-02-11",status:"on_track",alert:"",path:["コーポレート部の健全性担保","チームマネジメント","全員のゴール健全性担保"]},
-  { id:4,title:"支払調書の作成と配布",setDate:"2026-01-14",status:"warning",alert:"長期停滞の可能性",path:["コーポレート部の健全性担保","財務基盤の最適化","経理・税務対応","支払調書の作成と配布"]},
-  { id:5,title:"報酬金額管理シートの運用",setDate:"2026-01-26",status:"on_track",alert:"",path:["コーポレート部の健全性担保","財務基盤の最適化","報酬管理"]},
-  { id:6,title:"クレカ切り替え",setDate:"2026-01-26",status:"on_track",alert:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る","クレカ切り替え"]},
-  { id:7,title:"使うのやめるツールの検討",setDate:"2026-01-31",status:"on_track",alert:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る","ツール検討"]},
-  { id:8,title:"台さんに資料共有",setDate:"2026-02-15",status:"on_track",alert:"",path:["コーポレート部の健全性担保","組織管理基盤"]},
-  { id:9,title:"株主名簿の作成",setDate:"2026-02-16",status:"on_track",alert:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
-  { id:10,title:"高知裁判進める",setDate:"2026-02-15",status:"on_track",alert:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
-  { id:11,title:"スキルプラスの新規契約を記録する",setDate:"2026-02-20",status:"on_track",alert:"",path:["コーポレート部の健全性担保","財務基盤の最適化","契約管理"]},
-  { id:12,title:"契約とクーリングオフ・入金前契約解除をマッチングする",setDate:"2026-02-20",status:"on_track",alert:"",path:["コーポレート部の健全性担保","財務基盤の最適化","契約管理"]},
-  { id:13,title:"三上大のゴール",setDate:"2026-01-23",status:"warning",alert:"粒度が粗い（AI判定）",path:["三上大のゴール"]},
-  { id:14,title:"登記簿謄本取得",setDate:"2026-01-29",status:"on_track",alert:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
-  { id:15,title:"印鑑証明書取得",setDate:"2026-01-29",status:"on_track",alert:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
-  { id:16,title:"決算書のコピー",setDate:"2026-01-29",status:"on_track",alert:"",path:["コーポレート部の健全性担保","財務基盤の最適化","経理・税務対応"]},
-  { id:17,title:"事業内容がわかる書類の作成",setDate:"2026-01-29",status:"on_track",alert:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
-  { id:18,title:"日本リスキリング支援の口座開設",setDate:"2026-01-29",status:"on_track",alert:"",path:["コーポレート部の健全性担保","財務基盤の最適化","口座管理"]},
-  { id:19,title:"郵便局で開設手続き",setDate:"2026-02-16",status:"on_track",alert:"",path:["コーポレート部の健全性担保","財務基盤の最適化","口座管理"]},
-  { id:20,title:"各アカウントの決済変更",setDate:"2026-01-31",status:"on_track",alert:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る"]},
-  { id:21,title:"運用方針の策定",setDate:"2026-01-26",status:"on_track",alert:"",path:["コーポレート部の健全性担保","組織管理基盤","ガバナンスの運用"]},
-  { id:22,title:"運用担当者決める→割り振る",setDate:"2026-01-26",status:"on_track",alert:"",path:["コーポレート部の健全性担保","組織管理基盤","ガバナンスの運用"]},
+  {id:1,title:"【緊急】コスト削減施策をきっちりと回し切る",setDate:"2026-01-22",deadline:"2026-03-15",progress:55,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る"]},
+  {id:2,title:"ガバナンスの運用",setDate:"2026-01-31",deadline:"2026-03-31",progress:40,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","ガバナンスの運用"]},
+  {id:3,title:"チームの全員のゴールの健全性を担保する",setDate:"2026-02-11",deadline:"2026-03-31",progress:30,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","チームマネジメント","全員のゴール健全性担保"]},
+  {id:4,title:"支払調書の作成と配布",setDate:"2026-01-14",deadline:"2026-02-10",progress:10,status:"warning",alertKey:"stale",path:["コーポレート部の健全性担保","財務基盤の最適化","経理・税務対応","支払調書の作成と配布"]},
+  {id:5,title:"報酬金額管理シートの運用",setDate:"2026-01-26",deadline:"2026-03-15",progress:50,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","報酬管理"]},
+  {id:6,title:"クレカ切り替え",setDate:"2026-01-26",deadline:"2026-02-28",progress:70,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る","クレカ切り替え"]},
+  {id:7,title:"使うのやめるツールの検討",setDate:"2026-01-31",deadline:"2026-03-10",progress:45,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る","ツール検討"]},
+  {id:8,title:"台さんに資料共有",setDate:"2026-02-15",deadline:"2026-03-01",progress:20,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤"]},
+  {id:9,title:"株主名簿の作成",setDate:"2026-02-16",deadline:"2026-03-15",progress:25,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
+  {id:10,title:"高知裁判進める",setDate:"2026-02-15",deadline:"2026-04-30",progress:15,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
+  {id:11,title:"スキルプラスの新規契約を記録する",setDate:"2026-02-20",deadline:"2026-03-10",progress:30,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","契約管理"]},
+  {id:12,title:"契約とクーリングオフ・入金前契約解除をマッチングする",setDate:"2026-02-20",deadline:"2026-03-10",progress:20,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","契約管理"]},
+  {id:13,title:"三上大のゴール",setDate:"2026-01-23",deadline:"2026-03-31",progress:5,status:"warning",alertKey:"granularity",path:["三上大のゴール"]},
+  {id:14,title:"登記簿謄本取得",setDate:"2026-01-29",deadline:"2026-02-28",progress:80,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
+  {id:15,title:"印鑑証明書取得",setDate:"2026-01-29",deadline:"2026-02-28",progress:80,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
+  {id:16,title:"決算書のコピー",setDate:"2026-01-29",deadline:"2026-02-28",progress:90,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","経理・税務対応"]},
+  {id:17,title:"事業内容がわかる書類の作成",setDate:"2026-01-29",deadline:"2026-03-10",progress:40,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","法務・登記"]},
+  {id:18,title:"日本リスキリング支援の口座開設",setDate:"2026-01-29",deadline:"2026-02-28",progress:60,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","口座管理"]},
+  {id:19,title:"郵便局で開設手続き",setDate:"2026-02-16",deadline:"2026-03-05",progress:30,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","口座管理"]},
+  {id:20,title:"各アカウントの決済変更",setDate:"2026-01-31",deadline:"2026-03-10",progress:35,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","財務基盤の最適化","コスト削減施策を回し切る"]},
+  {id:21,title:"運用方針の策定",setDate:"2026-01-26",deadline:"2026-03-15",progress:50,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","ガバナンスの運用"]},
+  {id:22,title:"運用担当者決める→割り振る",setDate:"2026-01-26",deadline:"2026-03-01",progress:40,status:"on_track",alertKey:"",path:["コーポレート部の健全性担保","組織管理基盤","ガバナンスの運用"]},
 ];
 
-/* ═══ 直下メンバー ═══ */
+/* ═══ 直下メンバー（全ゴール表示） ═══ */
 const MEMBERS = {
   "五十嵐壮太郎":{goals:[
-    {id:101,title:"メモを作り提出",setDate:"2026-01-10",status:"warning",alert:"長期停滞の可能性",path:["コーポレート運営","顧客対応品質向上","メモを作り提出"]},
-    {id:102,title:"出来ないことを洗い出す",setDate:"2026-01-10",status:"warning",alert:"長期停滞の可能性",path:["コーポレート運営","顧客対応品質向上","スキル棚卸"]},
-    {id:103,title:"揉めてる顧客案件の営業の録画チェック",setDate:"2026-01-14",status:"warning",alert:"長期停滞の可能性",path:["コーポレート運営","顧客対応品質向上","営業録画チェック"]},
-    {id:104,title:"中途解約確定報告者手続き",setDate:"2026-02-01",status:"on_track",alert:"",path:["コーポレート運営","解約管理"]},
+    {id:101,title:"メモを作り提出",setDate:"2026-01-10",deadline:"2026-02-10",progress:10,status:"warning",alertKey:"stale",path:["コーポレート運営","顧客対応品質向上","メモを作り提出"]},
+    {id:102,title:"出来ないことを洗い出す",setDate:"2026-01-10",deadline:"2026-02-10",progress:5,status:"warning",alertKey:"stale",path:["コーポレート運営","顧客対応品質向上","スキル棚卸"]},
+    {id:103,title:"揉めてる顧客案件の営業の録画チェック",setDate:"2026-01-14",deadline:"2026-02-15",progress:0,status:"warning",alertKey:"stale",path:["コーポレート運営","顧客対応品質向上","営業録画チェック"]},
+    {id:104,title:"中途解約確定報告者手続き",setDate:"2026-02-01",deadline:"2026-03-15",progress:40,status:"on_track",alertKey:"",path:["コーポレート運営","解約管理"]},
   ]},
   "井上津留美":{goals:[
-    {id:201,title:"Freeeの契約",setDate:"2026-02-01",status:"on_track",alert:"",path:["コーポレート運営","経理基盤","Freee契約"]},
-    {id:202,title:"債権管理台帳更新",setDate:"2026-02-01",status:"on_track",alert:"",path:["コーポレート運営","経理基盤"]},
-    {id:203,title:"承認率入力",setDate:"2026-02-01",status:"warning",alert:"粒度が粗い（AI判定）",path:["コーポレート運営","経理基盤","承認率入力"]},
-    {id:204,title:"CBS引継ぎ完了",setDate:"2026-02-01",status:"on_track",alert:"",path:["コーポレート運営","経理基盤"]},
+    {id:201,title:"Freeeの契約",setDate:"2026-02-01",deadline:"2026-03-01",progress:60,status:"on_track",alertKey:"",path:["コーポレート運営","経理基盤","Freee契約"]},
+    {id:202,title:"債権管理台帳更新",setDate:"2026-02-01",deadline:"2026-03-10",progress:45,status:"on_track",alertKey:"",path:["コーポレート運営","経理基盤"]},
+    {id:203,title:"承認率入力",setDate:"2026-02-01",deadline:"2026-03-15",progress:20,status:"warning",alertKey:"granularity",path:["コーポレート運営","経理基盤","承認率入力"]},
+    {id:204,title:"CBS引継ぎ完了",setDate:"2026-02-01",deadline:"2026-03-01",progress:55,status:"on_track",alertKey:"",path:["コーポレート運営","経理基盤"]},
   ]},
   "伊藤正":{goals:[
-    {id:301,title:"ほっしーに定常業務のあれを依頼する",setDate:"2026-01-20",status:"on_track",alert:"",path:["コーポレート運営","コンプライアンス"]},
-    {id:302,title:"特商法違反チェックのオペレーションを整える",setDate:"2026-01-20",status:"on_track",alert:"",path:["コーポレート運営","コンプライアンス"]},
-    {id:303,title:"現行のコンプラルールを洗い出す",setDate:"2026-01-20",status:"on_track",alert:"",path:["コーポレート運営","コンプライアンス"]},
-    {id:304,title:"報告数値が上がってくる体制を整える",setDate:"2026-01-20",status:"on_track",alert:"",path:["コーポレート運営","コンプライアンス"]},
+    {id:301,title:"ほっしーに定常業務のあれを依頼する",setDate:"2026-01-20",deadline:"2026-02-28",progress:50,status:"on_track",alertKey:"",path:["コーポレート運営","コンプライアンス"]},
+    {id:302,title:"特商法違反チェックのオペレーションを整える",setDate:"2026-01-20",deadline:"2026-03-15",progress:35,status:"on_track",alertKey:"",path:["コーポレート運営","コンプライアンス"]},
+    {id:303,title:"現行のコンプラルールを洗い出す",setDate:"2026-01-20",deadline:"2026-03-01",progress:40,status:"on_track",alertKey:"",path:["コーポレート運営","コンプライアンス"]},
+    {id:304,title:"報告数値が上がってくる体制を整える",setDate:"2026-01-20",deadline:"2026-03-15",progress:25,status:"on_track",alertKey:"",path:["コーポレート運営","コンプライアンス"]},
   ]},
   "台信朗":{goals:[
-    {id:401,title:"手続き進める",setDate:"2026-02-01",status:"warning",alert:"粒度が粗い（AI判定）",path:["台信朗のゴール","手続き進める"]},
-    {id:402,title:"ミレニア新宿御苑賃賃契約解除",setDate:"2026-02-01",status:"on_track",alert:"",path:["コーポレート運営","総務"]},
+    {id:401,title:"手続き進める",setDate:"2026-02-01",deadline:"2026-03-15",progress:15,status:"warning",alertKey:"granularity",path:["台信朗のゴール","手続き進める"]},
+    {id:402,title:"ミレニア新宿御苑賃賃契約解除",setDate:"2026-02-01",deadline:"2026-03-01",progress:50,status:"on_track",alertKey:"",path:["コーポレート運営","総務"]},
   ]},
   "星野舜":{goals:[
-    {id:501,title:"ゴール設定・分解を全員100%完了させる",setDate:"2026-01-30",status:"on_track",alert:"",path:["コーポレート運営","Addness管理"]},
-    {id:502,title:"提出タスクのAddness Todo化100%",setDate:"2026-01-30",status:"on_track",alert:"",path:["コーポレート運営","Addness管理"]},
-    {id:503,title:"取引先のマスターデータを作る",setDate:"2026-01-07",status:"warning",alert:"長期停滞の可能性",path:["コーポレート運営","データ基盤"]},
-    {id:504,title:"Web App改修：バグ修正＋視覚改善",setDate:"2026-02-12",status:"on_track",alert:"",path:["コーポレート運営","ダッシュボード構築"]},
-    {id:505,title:"【構築PJ】ダッシュボード基盤構築",setDate:"2026-02-12",status:"on_track",alert:"",path:["コーポレート運営","ダッシュボード構築"]},
+    {id:501,title:"ゴール設定・分解を全員100%完了させる",setDate:"2026-01-30",deadline:"2026-03-15",progress:65,status:"on_track",alertKey:"",path:["コーポレート運営","Addness管理"]},
+    {id:502,title:"提出タスクのAddness Todo化100%",setDate:"2026-01-30",deadline:"2026-03-15",progress:70,status:"on_track",alertKey:"",path:["コーポレート運営","Addness管理"]},
+    {id:503,title:"取引先のマスターデータを作る",setDate:"2026-01-07",deadline:"2026-02-15",progress:5,status:"warning",alertKey:"stale",path:["コーポレート運営","データ基盤"]},
+    {id:504,title:"Web App改修：バグ修正＋視覚改善",setDate:"2026-02-12",deadline:"2026-03-15",progress:35,status:"on_track",alertKey:"",path:["コーポレート運営","ダッシュボード構築"]},
+    {id:505,title:"【構築PJ】ダッシュボード基盤構築",setDate:"2026-02-12",deadline:"2026-03-20",progress:60,status:"on_track",alertKey:"",path:["コーポレート運営","ダッシュボード構築"]},
   ]},
   "石川翔太":{goals:[
-    {id:601,title:"データウェアハウスの完成",setDate:"2026-01-15",status:"on_track",alert:"",path:["コーポレート運営","データ基盤"]},
-    {id:602,title:"Cloud SQL への導入",setDate:"2026-01-15",status:"on_track",alert:"",path:["コーポレート運営","データ基盤"]},
-    {id:603,title:"社用Mac への移行",setDate:"2026-01-15",status:"on_track",alert:"",path:["コーポレート運営","総務"]},
-    {id:604,title:"石川翔太のゴール",setDate:"2026-01-23",status:"warning",alert:"粒度が粗い（AI判定）",path:["石川翔太のゴール"]},
+    {id:601,title:"データウェアハウスの完成",setDate:"2026-01-15",deadline:"2026-03-01",progress:55,status:"on_track",alertKey:"",path:["コーポレート運営","データ基盤"]},
+    {id:602,title:"Cloud SQL への導入",setDate:"2026-01-15",deadline:"2026-03-01",progress:40,status:"on_track",alertKey:"",path:["コーポレート運営","データ基盤"]},
+    {id:603,title:"社用Mac への移行",setDate:"2026-01-15",deadline:"2026-02-28",progress:70,status:"on_track",alertKey:"",path:["コーポレート運営","総務"]},
+    {id:604,title:"石川翔太のゴール",setDate:"2026-01-23",deadline:"2026-03-31",progress:5,status:"warning",alertKey:"granularity",path:["石川翔太のゴール"]},
   ]},
   "笹川菜々子":{goals:[
-    {id:701,title:"日次：窓口_フロント関係",setDate:"2026-02-01",status:"on_track",alert:"",path:["コーポレート運営","顧客対応"]},
-    {id:702,title:"日次：窓口_クーオフ",setDate:"2026-02-01",status:"on_track",alert:"",path:["コーポレート運営","顧客対応"]},
-    {id:703,title:"日次：窓口_ライトプラン解約",setDate:"2026-02-01",status:"on_track",alert:"",path:["コーポレート運営","顧客対応"]},
+    {id:701,title:"日次：窓口_フロント関係",setDate:"2026-02-01",deadline:"2026-03-31",progress:50,status:"on_track",alertKey:"",path:["コーポレート運営","顧客対応"]},
+    {id:702,title:"日次：窓口_クーオフ",setDate:"2026-02-01",deadline:"2026-03-31",progress:50,status:"on_track",alertKey:"",path:["コーポレート運営","顧客対応"]},
+    {id:703,title:"日次：窓口_ライトプラン解約",setDate:"2026-02-01",deadline:"2026-03-31",progress:50,status:"on_track",alertKey:"",path:["コーポレート運営","顧客対応"]},
   ]},
   "谷口寿美子":{goals:[
-    {id:801,title:"中途解約マニュアルの変更",setDate:"2026-01-10",status:"warning",alert:"長期停滞の可能性",path:["コーポレート運営","解約管理"]},
-    {id:802,title:"五十嵐さんの教育",setDate:"2026-01-10",status:"warning",alert:"長期停滞の可能性",path:["コーポレート運営","人材育成"]},
-    {id:803,title:"谷口寿美子のゴール",setDate:"2026-01-23",status:"warning",alert:"粒度が粗い（AI判定）",path:["谷口寿美子のゴール"]},
-    {id:804,title:"構成イメージ考える",setDate:"2026-02-01",status:"on_track",alert:"",path:["コーポレート運営","解約管理"]},
+    {id:801,title:"中途解約マニュアルの変更",setDate:"2026-01-10",deadline:"2026-02-15",progress:10,status:"warning",alertKey:"stale",path:["コーポレート運営","解約管理"]},
+    {id:802,title:"五十嵐さんの教育",setDate:"2026-01-10",deadline:"2026-02-28",progress:15,status:"warning",alertKey:"stale",path:["コーポレート運営","人材育成"]},
+    {id:803,title:"谷口寿美子のゴール",setDate:"2026-01-23",deadline:"2026-03-31",progress:5,status:"warning",alertKey:"granularity",path:["谷口寿美子のゴール"]},
+    {id:804,title:"構成イメージ考える",setDate:"2026-02-01",deadline:"2026-03-10",progress:30,status:"on_track",alertKey:"",path:["コーポレート運営","解約管理"]},
   ]},
   "貴志祐介":{goals:[
-    {id:901,title:"総務LINEさばく",setDate:"2026-02-01",status:"on_track",alert:"",path:["コーポレート運営","総務"]},
-    {id:902,title:"【定常業務】",setDate:"2026-02-01",status:"warning",alert:"粒度が粗い（AI判定）",path:["貴志祐介のゴール","定常業務"]},
-    {id:903,title:"契約書関連依頼対応",setDate:"2026-02-01",status:"on_track",alert:"",path:["コーポレート運営","総務"]},
-    {id:904,title:"FX口座開設",setDate:"2026-02-01",status:"warning",alert:"粒度が粗い（AI判定）",path:["コーポレート運営","財務"]},
+    {id:901,title:"総務LINEさばく",setDate:"2026-02-01",deadline:"2026-03-31",progress:50,status:"on_track",alertKey:"",path:["コーポレート運営","総務"]},
+    {id:902,title:"【定常業務】",setDate:"2026-02-01",deadline:"2026-03-31",progress:30,status:"warning",alertKey:"granularity",path:["貴志祐介のゴール","定常業務"]},
+    {id:903,title:"契約書関連依頼対応",setDate:"2026-02-01",deadline:"2026-03-15",progress:45,status:"on_track",alertKey:"",path:["コーポレート運営","総務"]},
+    {id:904,title:"FX口座開設",setDate:"2026-02-01",deadline:"2026-03-10",progress:20,status:"warning",alertKey:"granularity",path:["コーポレート運営","財務"]},
   ]},
 };
 
@@ -121,61 +148,60 @@ const MEMBERS = {
 const TREE_DATA={id:"root",title:"コーポレート部の健全性担保",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
   {id:"fin",title:"財務基盤の最適化",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
     {id:"cost",title:"コスト削減施策を回し切る",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-      {id:"g1",title:"【緊急】コスト削減施策を回し切る",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"g6",title:"クレカ切り替え",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"g7",title:"ツール検討",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"g20",title:"各アカウントの決済変更",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
+      {id:"g1",title:"【緊急】コスト削減施策を回し切る",owner:"三上大慈",isLeaf:true,status:"on_track",progress:55,children:[]},
+      {id:"g6",title:"クレカ切り替え",owner:"三上大慈",isLeaf:true,status:"on_track",progress:70,children:[]},
+      {id:"g7",title:"ツール検討",owner:"三上大慈",isLeaf:true,status:"on_track",progress:45,children:[]},
+      {id:"g20",title:"各アカウントの決済変更",owner:"三上大慈",isLeaf:true,status:"on_track",progress:35,children:[]},
     ]},
     {id:"acct",title:"経理・税務対応",owner:"井上津留美",isLeaf:false,status:"warning",children:[
-      {id:"g4",title:"支払調書の作成と配布",owner:"三上大慈",isLeaf:true,status:"warning",children:[]},
-      {id:"g16",title:"決算書コピー",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"i201",title:"Freee契約",owner:"井上津留美",isLeaf:true,status:"on_track",children:[]},
-      {id:"i203",title:"承認率入力",owner:"井上津留美",isLeaf:true,status:"warning",children:[]},
+      {id:"g4",title:"支払調書の作成と配布",owner:"三上大慈",isLeaf:true,status:"warning",progress:10,children:[]},
+      {id:"g16",title:"決算書コピー",owner:"三上大慈",isLeaf:true,status:"on_track",progress:90,children:[]},
+      {id:"i201",title:"Freee契約",owner:"井上津留美",isLeaf:true,status:"on_track",progress:60,children:[]},
+      {id:"i203",title:"承認率入力",owner:"井上津留美",isLeaf:true,status:"warning",progress:20,children:[]},
     ]},
     {id:"contract",title:"契約管理",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-      {id:"g11",title:"スキルプラス新規契約記録",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"g12",title:"契約マッチング",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
+      {id:"g11",title:"スキルプラス新規契約記録",owner:"三上大慈",isLeaf:true,status:"on_track",progress:30,children:[]},
+      {id:"g12",title:"契約マッチング",owner:"三上大慈",isLeaf:true,status:"on_track",progress:20,children:[]},
     ]},
     {id:"bank",title:"口座管理",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-      {id:"g18",title:"リスキリング支援口座開設",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"g19",title:"郵便局開設手続き",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
+      {id:"g18",title:"リスキリング支援口座開設",owner:"三上大慈",isLeaf:true,status:"on_track",progress:60,children:[]},
+      {id:"g19",title:"郵便局開設手続き",owner:"三上大慈",isLeaf:true,status:"on_track",progress:30,children:[]},
     ]},
-    {id:"g5",title:"報酬金額管理シートの運用",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
+    {id:"g5",title:"報酬金額管理シートの運用",owner:"三上大慈",isLeaf:true,status:"on_track",progress:50,children:[]},
   ]},
   {id:"org",title:"組織管理基盤",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
     {id:"gov",title:"ガバナンスの運用",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-      {id:"g2",title:"ガバナンスの運用",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"g21",title:"運用方針の策定",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"g22",title:"運用担当者決定・割り振り",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
+      {id:"g2",title:"ガバナンスの運用",owner:"三上大慈",isLeaf:true,status:"on_track",progress:40,children:[]},
+      {id:"g21",title:"運用方針の策定",owner:"三上大慈",isLeaf:true,status:"on_track",progress:50,children:[]},
+      {id:"g22",title:"運用担当者決定・割り振り",owner:"三上大慈",isLeaf:true,status:"on_track",progress:40,children:[]},
     ]},
     {id:"legal",title:"法務・登記",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-      {id:"g9",title:"株主名簿の作成",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"g10",title:"高知裁判進める",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"g14",title:"登記簿謄本取得",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"g15",title:"印鑑証明書取得",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
-      {id:"g17",title:"事業内容書類作成",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
+      {id:"g9",title:"株主名簿の作成",owner:"三上大慈",isLeaf:true,status:"on_track",progress:25,children:[]},
+      {id:"g10",title:"高知裁判進める",owner:"三上大慈",isLeaf:true,status:"on_track",progress:15,children:[]},
+      {id:"g14",title:"登記簿謄本取得",owner:"三上大慈",isLeaf:true,status:"on_track",progress:80,children:[]},
+      {id:"g15",title:"印鑑証明書取得",owner:"三上大慈",isLeaf:true,status:"on_track",progress:80,children:[]},
+      {id:"g17",title:"事業内容書類作成",owner:"三上大慈",isLeaf:true,status:"on_track",progress:40,children:[]},
     ]},
-    {id:"g8",title:"台さんに資料共有",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
+    {id:"g8",title:"台さんに資料共有",owner:"三上大慈",isLeaf:true,status:"on_track",progress:20,children:[]},
   ]},
   {id:"team",title:"チームマネジメント",owner:"三上大慈",isLeaf:false,status:"on_track",children:[
-    {id:"g3",title:"全員のゴール健全性担保",owner:"三上大慈",isLeaf:true,status:"on_track",children:[]},
+    {id:"g3",title:"全員のゴール健全性担保",owner:"三上大慈",isLeaf:true,status:"on_track",progress:30,children:[]},
     {id:"addmgt",title:"Addness管理",owner:"星野舜",isLeaf:false,status:"on_track",children:[
-      {id:"h501",title:"全員ゴール設定100%",owner:"星野舜",isLeaf:true,status:"on_track",children:[]},
-      {id:"h502",title:"Todo化100%",owner:"星野舜",isLeaf:true,status:"on_track",children:[]},
+      {id:"h501",title:"全員ゴール設定100%",owner:"星野舜",isLeaf:true,status:"on_track",progress:65,children:[]},
+      {id:"h502",title:"Todo化100%",owner:"星野舜",isLeaf:true,status:"on_track",progress:70,children:[]},
     ]},
     {id:"dashpj",title:"ダッシュボード構築",owner:"星野舜",isLeaf:false,status:"on_track",children:[
-      {id:"h504",title:"Web App改修",owner:"星野舜",isLeaf:true,status:"on_track",children:[]},
-      {id:"h505",title:"基盤構築PJ",owner:"星野舜",isLeaf:true,status:"on_track",children:[]},
+      {id:"h504",title:"Web App改修",owner:"星野舜",isLeaf:true,status:"on_track",progress:35,children:[]},
+      {id:"h505",title:"基盤構築PJ",owner:"星野舜",isLeaf:true,status:"on_track",progress:60,children:[]},
     ]},
-    {id:"h503",title:"取引先マスターデータ",owner:"星野舜",isLeaf:true,status:"warning",children:[]},
+    {id:"h503",title:"取引先マスターデータ",owner:"星野舜",isLeaf:true,status:"warning",progress:5,children:[]},
     {id:"comp",title:"コンプライアンス",owner:"伊藤正",isLeaf:false,status:"on_track",children:[
-      {id:"i301",title:"定常業務依頼",owner:"伊藤正",isLeaf:true,status:"on_track",children:[]},
-      {id:"i302",title:"特商法チェックオペ",owner:"伊藤正",isLeaf:true,status:"on_track",children:[]},
+      {id:"i301",title:"定常業務依頼",owner:"伊藤正",isLeaf:true,status:"on_track",progress:50,children:[]},
+      {id:"i302",title:"特商法チェックオペ",owner:"伊藤正",isLeaf:true,status:"on_track",progress:35,children:[]},
     ]},
   ]},
 ]};
 
-function calcDays(d){return d?Math.ceil((new Date("2026-02-25")-new Date(d))/86400000):0;}
 
 /* ─── Icons ─── */
 const Icon={
@@ -186,6 +212,30 @@ const Icon={
   alert:p=><svg width="13" height="13" viewBox="0 0 13 13" fill="none" {...p}><path d="M6.5 1L12 11.5H1L6.5 1Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/><path d="M6.5 5V7.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/><circle cx="6.5" cy="9.2" r="0.6" fill="currentColor"/></svg>,
   external:p=><svg width="12" height="12" viewBox="0 0 12 12" fill="none" {...p}><path d="M9 3L4.5 7.5M9 3H6M9 3V6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/><path d="M9 8V9.5A1.5 1.5 0 017.5 11H2.5A1.5 1.5 0 011 9.5V4.5A1.5 1.5 0 012.5 3H4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>,
 };
+
+/* ─── 2段プログレスバー ─── */
+function DualProgressBar({setDate,deadline,progress,isWarn}){
+  const elapsed=calcDays(setDate);
+  const rem=Math.max(0,calcRemainingDays(deadline)||0);
+  const total=elapsed+rem;
+  const timePercent=total>0?Math.min(100,(elapsed/total)*100):0;
+  const progressPercent=Math.min(100,Math.max(0,progress||0));
+  const gap=timePercent-progressPercent;
+  return(
+    <div className="dual-bar">
+      <div className="dual-bar-row">
+        <span className="dual-bar-label">時間</span>
+        <div className="dual-bar-track"><div className="dual-bar-fill" style={{width:timePercent+"%",background:gap>30?'var(--red)':timePercent>70?'var(--amber)':'var(--ink-4)'}}/></div>
+        <span className="dual-bar-pct" style={{color:'var(--ink-3)'}}>{Math.round(timePercent)}%</span>
+      </div>
+      <div className="dual-bar-row">
+        <span className="dual-bar-label">進捗</span>
+        <div className="dual-bar-track"><div className="dual-bar-fill" style={{width:progressPercent+"%",background:isWarn?'var(--amber)':progressPercent>60?'var(--green)':'var(--blue)'}}/></div>
+        <span className="dual-bar-pct" style={{color:isWarn?'var(--amber)':'var(--green)'}}>{progressPercent}%</span>
+      </div>
+    </div>
+  );
+}
 
 /* ─── パスポップアップ ─── */
 function PathPopup({show,goal,onClose}){
@@ -220,25 +270,29 @@ function PathPopup({show,goal,onClose}){
 }
 
 /* ─── ゴールカード ─── */
-function GoalCard({goal,onConfirm,onPath,delay=0}){
+function GoalCard({goal,onConfirm,onPath,delay=0,tone}){
   const[vis,setVis]=useState(false);
   useEffect(()=>{const t=setTimeout(()=>setVis(true),delay);return()=>clearTimeout(t);},[delay]);
-  const isWarn=goal.status==="warning"||goal.alert;
-  const days=calcDays(goal.setDate);
+  const isWarn=goal.status==="warning"||goal.alertKey;
+  const remaining=calcRemainingDays(goal.deadline);
+  const alertText=getAlertText(goal.alertKey,tone);
   return(
     <div className={"g-card"+(isWarn?" g-card--warn":"")} style={{opacity:vis?1:0,transform:vis?"translateY(0)":"translateY(8px)",transition:"opacity 0.4s ease, transform 0.4s ease"}}>
       <div className="g-top">
         <div className="g-info">
           <div className="g-title">{goal.title}</div>
-          {goal.alert&&<div className="g-alert"><Icon.alert style={{width:11,height:11}}/> {goal.alert}</div>}
-          <div className="g-meta"><span>設定 {goal.setDate.slice(5).replace('-','/')}</span><span className="g-meta-sep">·</span><span style={{color:days>40?'var(--red)':days>25?'var(--amber)':'var(--ink-3)'}}>{days}日経過</span></div>
+          {alertText&&<div className="g-alert"><Icon.alert style={{width:11,height:11}}/> {alertText}</div>}
+          <div className="g-meta">
+            <span>設定 {formatShortDate(goal.setDate)}</span>
+            {goal.deadline&&<><span className="g-meta-sep">→</span><span style={{color:remaining!==null&&remaining<0?'var(--red)':remaining!==null&&remaining<7?'var(--amber)':'var(--ink-3)'}}>期限 {formatShortDate(goal.deadline)}{remaining!==null&&(remaining<0?` (${Math.abs(remaining)}日超過)`:`（残${remaining}日）`)}</span></>}
+          </div>
         </div>
-        <div className="g-days-ring" style={{borderColor:isWarn?'var(--amber-muted)':days>40?'#f5c4c4':'var(--green-muted)'}}>
-          <span className="g-days-num" style={{color:isWarn?'var(--amber)':days>40?'var(--red)':'var(--green)'}}>{days}</span>
-          <span className="g-days-unit">日</span>
+        <div className="g-progress-circle" style={{borderColor:isWarn?'var(--amber-muted)':(goal.progress||0)>60?'var(--green-muted)':'var(--blue-light)'}}>
+          <span className="g-progress-num" style={{color:isWarn?'var(--amber)':(goal.progress||0)>60?'var(--green)':'var(--blue)'}}>{goal.progress||0}</span>
+          <span className="g-progress-unit">%</span>
         </div>
       </div>
-      <div className="g-bar"><div className="g-bar-fill" style={{width:Math.min(100,Math.max(8,days*2))+"%",background:isWarn?'var(--amber)':days>40?'var(--red)':'var(--green)'}}/></div>
+      <DualProgressBar setDate={goal.setDate} deadline={goal.deadline} progress={goal.progress} isWarn={isWarn}/>
       <div className="g-actions">
         <button className="g-btn g-btn--path" onClick={()=>onPath(goal)}><Icon.route/> パス照会</button>
         {isWarn&&<button className={"g-btn g-btn--ack"+(goal.confirmed?" g-btn--acked":"")} onClick={()=>onConfirm(goal.id)}><Icon.check/> {goal.confirmed?"確認済み":"確認する"}</button>}
@@ -248,12 +302,13 @@ function GoalCard({goal,onConfirm,onPath,delay=0}){
   );
 }
 
-/* ─── メンバーカード ─── */
-function MemberCard({name,goals,onConfirm,onPath,delay=0}){
+/* ─── メンバーカード（全ゴール表示版） ─── */
+function MemberCard({name,goals,onConfirm,onPath,delay=0,tone}){
   const[open,setOpen]=useState(false);
   const[vis,setVis]=useState(false);
   useEffect(()=>{const t=setTimeout(()=>setVis(true),delay);return()=>clearTimeout(t);},[delay]);
-  const alerts=goals.filter(g=>g.alert).length;
+  const alerts=goals.filter(g=>g.alertKey).length;
+  const avgProgress=goals.length>0?Math.round(goals.reduce((s,g)=>s+(g.progress||0),0)/goals.length):0;
   return(
     <div className={"m-card"+(alerts>0?" m-card--warn":"")} style={{opacity:vis?1:0,transform:vis?"translateY(0)":"translateY(8px)",transition:"opacity 0.4s ease, transform 0.4s ease"}}>
       <div className="m-head" onClick={()=>setOpen(!open)}>
@@ -261,17 +316,18 @@ function MemberCard({name,goals,onConfirm,onPath,delay=0}){
           <div className="m-avatar" style={{background:alerts>0?'var(--amber-light)':'var(--green-light)',color:alerts>0?'var(--amber)':'var(--green)'}}>{name[0]}</div>
           <div>
             <div className="m-name">{name}</div>
-            <div className="m-sub">フォーカスゴール {goals.length}件</div>
+            <div className="m-sub">フォーカスゴール {goals.length}件 ｜ 平均進捗 {avgProgress}%</div>
           </div>
         </div>
         <div className="m-head-right">
-          {alerts>0&&<span className="m-alert-badge"><Icon.alert style={{width:10,height:10}}/> {alerts}</span>}
+          {alerts>0&&<span className="m-alert-badge"><Icon.alert style={{width:10,height:10}}/> 注意{alerts}</span>}
+          {alerts===0&&<span className="m-ok-badge">✓ 順調</span>}
           <span className={"m-arrow"+(open?" m-arrow--open":"")}><Icon.chevron/></span>
         </div>
       </div>
       {open&&(
         <div className="m-body">
-          {goals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={onConfirm} onPath={onPath} delay={i*50}/>)}
+          {goals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={onConfirm} onPath={onPath} delay={i*50} tone={tone}/>)}
         </div>
       )}
     </div>
@@ -304,6 +360,7 @@ function TreeNode({node,depth=0}){
         {hasKids&&<span className={"tr-arrow"+(open?" tr-arrow--open":"")}><Icon.chevron/></span>}
         {node.isLeaf&&<span className="tr-leaf-dot" style={{background:color}}/>}
         <span className="tr-title" style={{fontWeight:node.isLeaf?400:600}}>{node.title}</span>
+        {node.isLeaf&&node.progress!==undefined&&<span className="tr-progress">{node.progress}%</span>}
         {node.isLeaf&&<span className="tr-status" style={{color,background:isWarn?'var(--amber-light)':'var(--green-light)'}}>{isWarn?'!':'✓'}</span>}
         <span className="tr-owner">{node.owner}</span>
       </div>
@@ -336,12 +393,25 @@ function LINEPhone({children}){
   );
 }
 
+/* ─── トーン切り替え ─── */
+function ToneSwitch({tone,onToggle}){
+  return(
+    <div className="tone-switch" onClick={onToggle}>
+      <span className="tone-switch-label">文言トーン:</span>
+      <span className={"tone-chip"+(tone==="soft"?" tone-chip--active":"")} style={tone==="soft"?{background:'var(--green-light)',color:'var(--green)'}:{}}>やわらか</span>
+      <span className={"tone-chip"+(tone==="factual"?" tone-chip--active":"")} style={tone==="factual"?{background:'var(--blue-light)',color:'var(--blue)'}:{}}>事実ベース</span>
+    </div>
+  );
+}
+
 /* ═══ メインApp ═══ */
 function App(){
   const[tab,setTab]=useState("mygoals");
   const[myGoals,setMyGoals]=useState(MY_GOALS);
   const[members,setMembers]=useState(MEMBERS);
   const[pathGoal,setPathGoal]=useState(null);
+  const[tone,setTone]=useState("soft");
+  const toggleTone=useCallback(()=>setTone(t=>t==="soft"?"factual":"soft"),[]);
 
   const handleConfirm=useCallback(id=>{
     setMyGoals(p=>p.map(g=>g.id===id?{...g,confirmed:!g.confirmed}:g));
@@ -350,10 +420,10 @@ function App(){
 
   const entries=useMemo(()=>Object.entries(members),[members]);
   const allMG=useMemo(()=>entries.flatMap(e=>e[1].goals),[entries]);
-  const memberAlerts=allMG.filter(g=>g.alert).length;
-  const myAlerts=myGoals.filter(g=>g.alert).length;
-  const staleCount=allMG.filter(g=>g.alert&&g.alert.includes("停滞")).length;
-  const granCount=allMG.filter(g=>g.alert&&g.alert.includes("粒度")).length;
+  const attentionCount=allMG.filter(g=>g.alertKey).length;
+  const myAttention=myGoals.filter(g=>g.alertKey).length;
+  const staleCount=allMG.filter(g=>g.alertKey==="stale").length;
+  const granCount=allMG.filter(g=>g.alertKey==="granularity").length;
 
   const tabs=[
     {id:"mygoals",label:"今日のゴール"},
@@ -379,7 +449,7 @@ function App(){
             <div className="header-stat-divider"/>
             <div className="header-stat"><span className="header-stat-num">{entries.length}</span><span className="header-stat-label">直下</span></div>
             <div className="header-stat-divider"/>
-            <div className="header-stat"><span className="header-stat-num" style={{color:memberAlerts>0?'var(--amber)':'var(--green)'}}>{memberAlerts}</span><span className="header-stat-label">要注意</span></div>
+            <div className="header-stat"><span className="header-stat-num" style={{color:attentionCount>0?'var(--amber)':'var(--green)'}}>{attentionCount}</span><span className="header-stat-label">注意項目</span></div>
             <div className="header-date">2026.02.25 Tue</div>
           </div>
         </div>
@@ -391,33 +461,41 @@ function App(){
 
       <main className="main"><div className="container">
 
+        <ToneSwitch tone={tone} onToggle={toggleTone}/>
+
         {tab==="mygoals"&&(
           <div className="page fade-in">
             <div className="insight-card">
               <div className="insight-head"><div className="insight-icon">!</div><span className="insight-title">注目ポイント</span></div>
-              <p className="insight-body">「<strong style={{color:'var(--amber)'}}>支払調書の作成と配布</strong>」が42日経過で停滞中。また「<strong style={{color:'var(--amber)'}}>三上大のゴール</strong>」は粒度が粗いため具体アクションに分解しましょう。</p>
+              <p className="insight-body">
+                {tone==="soft"
+                  ? <>「<strong style={{color:'var(--amber)'}}>支払調書の作成と配布</strong>」がしばらく更新されていません（42日経過）。また「<strong style={{color:'var(--amber)'}}>三上大のゴール</strong>」はもう少し具体的なアクションに分解できそうです。</>
+                  : <>「<strong style={{color:'var(--amber)'}}>支払調書の作成と配布</strong>」が42日経過で停滞中。期限を15日超過。「<strong style={{color:'var(--amber)'}}>三上大のゴール</strong>」は粒度が粗いため具体アクションに分解が必要。</>
+                }
+              </p>
             </div>
-            <div className="goal-list">{myGoals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*40+80}/>)}</div>
+            <div className="goal-list">{myGoals.map((g,i)=><GoalCard key={g.id} goal={g} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*40+80} tone={tone}/>)}</div>
           </div>
         )}
 
         {tab==="manager"&&(
           <div className="page fade-in">
-            <div className="insight-card" style={{borderLeft:'3px solid var(--red)'}}>
-              <div className="insight-head"><div className="insight-icon" style={{background:'var(--red-light)',color:'var(--red)'}}>!</div><span className="insight-title">異常サマリー</span></div>
+            <div className="insight-card" style={{borderLeft:'3px solid var(--amber)'}}>
+              <div className="insight-head"><div className="insight-icon" style={{background:'var(--amber-light)',color:'var(--amber)'}}>!</div><span className="insight-title">注意サマリー</span></div>
               <p className="insight-body">
-                <strong style={{color:'var(--red)'}}>五十嵐壮太郎</strong>・<strong style={{color:'var(--red)'}}>谷口寿美子</strong>のゴールが1月初旬から停滞。
-                <strong style={{color:'var(--amber)'}}>石川翔太</strong>・<strong style={{color:'var(--amber)'}}>貴志祐介</strong>は粒度が粗いゴールあり。
-                <strong style={{color:'var(--green)'}}>星野舜</strong>は構築PJ順調だが「取引先マスターデータ」49日停滞。
+                {tone==="soft"
+                  ? <><strong style={{color:'var(--red)'}}>五十嵐壮太郎</strong>・<strong style={{color:'var(--red)'}}>谷口寿美子</strong>のゴールが1月初旬から更新されていません。<strong style={{color:'var(--amber)'}}>石川翔太</strong>・<strong style={{color:'var(--amber)'}}>貴志祐介</strong>はもう少し具体的にできるゴールがあります。<strong style={{color:'var(--green)'}}>星野舜</strong>は構築PJ順調ですが「取引先マスターデータ」が49日更新なしです。</>
+                  : <><strong style={{color:'var(--red)'}}>五十嵐壮太郎</strong>・<strong style={{color:'var(--red)'}}>谷口寿美子</strong>のゴールが1月初旬から停滞。<strong style={{color:'var(--amber)'}}>石川翔太</strong>・<strong style={{color:'var(--amber)'}}>貴志祐介</strong>は粒度が粗いゴールあり。<strong style={{color:'var(--green)'}}>星野舜</strong>は構築PJ順調だが「取引先マスターデータ」49日停滞。</>
+                }
               </p>
             </div>
             <SummaryGrid items={[
               {label:"フォーカスゴール",value:allMG.length,accent:"var(--green)"},
-              {label:"異常検知",value:memberAlerts,accent:"var(--amber)"},
-              {label:"長期停滞",value:staleCount,accent:"var(--red)"},
-              {label:"粒度粗い",value:granCount,accent:"var(--amber)"},
+              {label:"注意項目",value:attentionCount,accent:"var(--amber)"},
+              {label:"更新なし",value:staleCount,accent:"var(--red)"},
+              {label:"粒度確認",value:granCount,accent:"var(--amber)"},
             ]}/>
-            {entries.map(([name,data],i)=><MemberCard key={name} name={name} goals={data.goals} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*50+80}/>)}
+            {entries.map(([name,data],i)=><MemberCard key={name} name={name} goals={data.goals} onConfirm={handleConfirm} onPath={setPathGoal} delay={i*50+80} tone={tone}/>)}
           </div>
         )}
 
@@ -425,7 +503,7 @@ function App(){
           <div className="page fade-in">
             <div className="tree-legend">
               <span className="legend-chip"><span className="legend-dot" style={{background:'var(--green)'}}/>順調</span>
-              <span className="legend-chip"><span className="legend-dot" style={{background:'var(--amber)'}}/>異常</span>
+              <span className="legend-chip"><span className="legend-dot" style={{background:'var(--amber)'}}/>注意</span>
               <span className="legend-chip"><span className="legend-dot" style={{background:'var(--green)'}}/>フォーカスゴール</span>
             </div>
             <div className="tree-root">
@@ -447,27 +525,64 @@ function App(){
             <LINEPhone>
               <div className="lb-head">今日のフォーカスゴール（{myGoals.length}件）</div>
               <div className="lb-greet">おはようございます、三上大慈さん</div>
-              {myGoals.slice(0,4).map((g,i)=>{const isW=g.alert;return(
-                <div key={i} className={"lb-item"+(isW?" lb-item--warn":"")}>
-                  <div className="lb-item-title">{g.title}</div>
-                  {isW&&<div className="lb-item-meta"><span className="lb-item-alert">{g.alert}</span></div>}
-                </div>
-              );})}
-              <div className="lb-more">他 {myGoals.length-4}件</div>
-              <div className="lb-suggest"><div className="lb-suggest-label">注目ポイント</div><div className="lb-suggest-text">「支払調書」42日停滞。「三上大のゴール」は粒度が粗いので分解を。</div></div>
+              {myGoals.filter(g=>g.alertKey).map((g,i)=>{
+                const remaining=calcRemainingDays(g.deadline);
+                return(
+                  <div key={i} className="lb-item lb-item--warn">
+                    <div className="lb-item-title">{g.title}</div>
+                    <div className="lb-item-meta">
+                      期限 {formatShortDate(g.deadline)}{remaining!==null&&(remaining<0?` (${Math.abs(remaining)}日超過)`:` (残${remaining}日)`)} ｜ 進捗 {g.progress||0}%
+                      <span className="lb-item-alert"> · {getAlertText(g.alertKey,tone)}</span>
+                    </div>
+                  </div>
+                );
+              })}
+              {myGoals.filter(g=>!g.alertKey).slice(0,2).map((g,i)=>{
+                const remaining=calcRemainingDays(g.deadline);
+                return(
+                  <div key={i} className="lb-item">
+                    <div className="lb-item-title">{g.title}</div>
+                    <div className="lb-item-meta">期限 {formatShortDate(g.deadline)}{remaining!==null&&` (残${remaining}日)`} ｜ 進捗 {g.progress||0}%</div>
+                  </div>
+                );
+              })}
+              <div className="lb-more">他 {myGoals.length - myGoals.filter(g=>g.alertKey).length - 2}件は順調</div>
+              <div className="lb-suggest"><div className="lb-suggest-label">注目ポイント</div><div className="lb-suggest-text">
+                {tone==="soft"?"「支払調書」がしばらく更新されていません。「三上大のゴール」はもう少し具体的に分解しましょう。":"「支払調書」42日停滞・期限15日超過。「三上大のゴール」は粒度が粗いので分解を。"}
+              </div></div>
               <div className="lb-btns"><div className="lb-btn">パス照会</div><div className="lb-btn lb-btn--primary">詳細 →</div></div>
             </LINEPhone>
 
-            <p className="line-section-label" style={{marginTop:24}}>直下メンバー異常通知</p>
+            <p className="line-section-label" style={{marginTop:24}}>直下メンバー サマリー</p>
             <LINEPhone>
-              <div className="lb-head" style={{borderBottomColor:'var(--red)'}}>直下メンバーの異常（{memberAlerts}件）</div>
-              <div className="lb-greet">直下{entries.length}名の異常レポート</div>
-              <div className="lb-item lb-item--warn"><div className="lb-item-title" style={{fontWeight:700}}>五十嵐壮太郎 <span style={{color:'var(--red)',fontSize:10,fontWeight:600}}>— 3件停滞</span></div><div className="lb-item-meta">メモ提出 / スキル洗い出し / 営業録画チェック</div></div>
-              <div className="lb-item lb-item--warn"><div className="lb-item-title" style={{fontWeight:700}}>谷口寿美子 <span style={{color:'var(--red)',fontSize:10,fontWeight:600}}>— 停滞+粒度</span></div><div className="lb-item-meta">解約マニュアル変更 / 「谷口寿美子のゴール」</div></div>
-              <div className="lb-item lb-item--warn"><div className="lb-item-title" style={{fontWeight:700}}>星野舜 <span style={{color:'var(--amber)',fontSize:10,fontWeight:600}}>— 1件停滞</span></div><div className="lb-item-meta">取引先マスターデータ（49日経過）</div></div>
-              <div className="lb-item lb-item--warn"><div className="lb-item-title" style={{fontWeight:700}}>石川翔太 / 貴志祐介 <span style={{color:'var(--amber)',fontSize:10,fontWeight:600}}>— 粒度</span></div><div className="lb-item-meta">「石川翔太のゴール」「定常業務」「FX口座開設」</div></div>
-              <div className="lb-more">他 {entries.length-5}名は順調 ✓</div>
-              <div className="lb-btns"><div className="lb-btn">異常確認</div><div className="lb-btn lb-btn--primary">Web →</div></div>
+              <div className="lb-head" style={{borderBottomColor:'var(--blue)'}}>直下メンバー（{entries.length}名）</div>
+              <div className="lb-greet">注意項目 {attentionCount}件 ｜ 詳細はWebで確認</div>
+
+              {entries.map(([name,data],i)=>{
+                const alerts=data.goals.filter(g=>g.alertKey).length;
+                const avg=data.goals.length>0?Math.round(data.goals.reduce((s,g)=>s+(g.progress||0),0)/data.goals.length):0;
+                const hasAlert=alerts>0;
+                return(
+                  <div key={i} className={"lb-member-row"+(hasAlert?" lb-member-row--warn":"")}>
+                    <div className="lb-member-name">{name}</div>
+                    <div className="lb-member-stats">
+                      <span>{data.goals.length}件</span>
+                      <span className="lb-member-progress">進捗{avg}%</span>
+                      {hasAlert
+                        ? <span className="lb-member-alert">注意{alerts}</span>
+                        : <span className="lb-member-ok">✓</span>
+                      }
+                    </div>
+                    {hasAlert&&<div className="lb-member-detail">
+                      {data.goals.filter(g=>g.alertKey).map((g,j)=>(
+                        <div key={j} className="lb-member-issue">· {g.title}{tone==="soft"?"":" — "+getAlertText(g.alertKey,tone)}</div>
+                      ))}
+                    </div>}
+                  </div>
+                );
+              })}
+
+              <div className="lb-btns" style={{marginTop:10}}><div className="lb-btn">注意を確認</div><div className="lb-btn lb-btn--primary">Web →</div></div>
             </LINEPhone>
           </div>
         )}
@@ -495,6 +610,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 .header-stat-divider{width:1px;height:24px;background:var(--surface-3);}
 .header-date{font-size:11px;color:var(--ink-4);font-variant-numeric:tabular-nums;}
 @media(min-width:768px){.header{padding:18px 0;}.header-logo-mark{width:40px;height:40px;font-size:17px;}.header-name{font-size:17px;}.header-stat-num{font-size:24px;}}
+
+/* ═══ Tone Switch ═══ */
+.tone-switch{display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-bottom:12px;cursor:pointer;user-select:none;}
+.tone-switch-label{font-size:10px;color:var(--ink-4);font-weight:500;}
+.tone-chip{font-size:10px;padding:3px 10px;border-radius:12px;font-weight:600;background:var(--surface-3);color:var(--ink-4);transition:all 0.2s;}
+.tone-chip--active{box-shadow:var(--shadow-sm);}
 
 /* ═══ Nav ═══ */
 .nav{background:var(--surface);border-bottom:1px solid var(--surface-3);position:sticky;top:0;z-index:50;}
@@ -527,13 +648,20 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 .g-info{flex:1;min-width:0;}
 .g-title{font-size:13px;font-weight:600;color:var(--ink);line-height:1.5;margin-bottom:4px;}
 .g-alert{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--amber);font-weight:600;margin-bottom:4px;}
-.g-meta{font-size:11px;color:var(--ink-3);display:flex;align-items:center;}
-.g-meta-sep{margin:0 6px;color:var(--ink-5);}
-.g-days-ring{width:44px;height:44px;border-radius:50%;border:2.5px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
-.g-days-num{font-size:16px;font-weight:900;line-height:1;}
-.g-days-unit{font-size:8px;color:var(--ink-4);font-weight:500;}
-.g-bar{height:3px;background:var(--surface-3);border-radius:2px;margin:12px 0;overflow:hidden;}
-.g-bar-fill{height:100%;border-radius:2px;transition:width 0.6s ease;}
+.g-meta{font-size:11px;color:var(--ink-3);display:flex;align-items:center;flex-wrap:wrap;}
+.g-meta-sep{margin:0 4px;color:var(--ink-5);}
+.g-progress-circle{width:44px;height:44px;border-radius:50%;border:2.5px solid;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;}
+.g-progress-num{font-size:15px;font-weight:900;line-height:1;}
+.g-progress-unit{font-size:8px;color:var(--ink-4);font-weight:500;}
+
+/* ═══ Dual Progress Bar ═══ */
+.dual-bar{margin:10px 0;display:flex;flex-direction:column;gap:4px;}
+.dual-bar-row{display:flex;align-items:center;gap:6px;}
+.dual-bar-label{font-size:9px;color:var(--ink-4);font-weight:600;width:24px;text-align:right;flex-shrink:0;}
+.dual-bar-track{flex:1;height:4px;background:var(--surface-3);border-radius:2px;overflow:hidden;}
+.dual-bar-fill{height:100%;border-radius:2px;transition:width 0.6s ease;}
+.dual-bar-pct{font-size:9px;font-weight:700;width:28px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums;}
+
 .g-actions{display:flex;gap:6px;}
 .g-btn{padding:7px 12px;border-radius:8px;border:1px solid var(--surface-3);background:var(--surface);color:var(--ink-2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:4px;transition:all 0.15s;white-space:nowrap;}
 .g-btn:hover{background:var(--surface-2);border-color:var(--ink-5);}
@@ -553,6 +681,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 .m-sub{font-size:10px;color:var(--ink-4);margin-top:1px;}
 .m-head-right{display:flex;align-items:center;gap:8px;}
 .m-alert-badge{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--amber);font-weight:600;background:var(--amber-light);padding:3px 10px;border-radius:12px;}
+.m-ok-badge{font-size:10px;color:var(--green);font-weight:600;background:var(--green-light);padding:3px 10px;border-radius:12px;}
 .m-arrow{color:var(--ink-4);transition:transform 0.2s;display:inline-flex;transform:rotate(90deg);}
 .m-arrow--open{transform:rotate(270deg);}
 .m-body{padding:0 14px 14px;border-top:1px solid var(--surface-3);}
@@ -576,7 +705,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 .tree-root-title{font-size:14px;font-weight:800;color:var(--ink);}
 .tree-root-sub{font-size:11px;color:var(--ink-4);margin-left:auto;}
 .tree-container{background:var(--surface);border:1px solid var(--surface-3);border-radius:var(--radius-lg);padding:14px;box-shadow:var(--shadow-sm);}
-
 .tr-node{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;border-left:2px solid transparent;margin-bottom:2px;}
 .tr-node--parent{cursor:pointer;}
 .tr-node--parent:hover{background:var(--surface-2);}
@@ -585,6 +713,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 .tr-arrow--open{transform:rotate(90deg);}
 .tr-leaf-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
 .tr-title{flex:1;font-size:12px;color:var(--ink);line-height:1.5;min-width:0;}
+.tr-progress{font-size:9px;font-weight:700;color:var(--ink-3);font-variant-numeric:tabular-nums;}
 .tr-status{font-size:9px;font-weight:700;padding:1px 6px;border-radius:6px;}
 .tr-owner{font-size:9px;color:var(--ink-4);white-space:nowrap;flex-shrink:0;}
 @media(min-width:768px){.tr-title{font-size:13px;}}
@@ -640,6 +769,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 
 .line-section-label{text-align:center;font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:8px;}
 
+/* LINE Bubble Content */
 .lb-head{font-weight:700;font-size:14px;color:#1a1a1a;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #eee;}
 .lb-greet{font-size:12px;color:#888;margin-bottom:10px;}
 .lb-item{padding:8px 10px;background:#f8f8f6;border-radius:8px;margin-bottom:6px;border-left:3px solid var(--green);}
@@ -654,6 +784,17 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 .lb-btns{display:flex;gap:5px;}
 .lb-btn{flex:1;text-align:center;padding:8px 0;border-radius:8px;background:#f0f0ee;color:#666;font-size:11px;font-weight:600;}
 .lb-btn--primary{background:#4a7048;color:#fff;}
+
+/* LINE Member Summary Row */
+.lb-member-row{padding:6px 8px;background:#f8f8f6;border-radius:6px;margin-bottom:4px;border-left:3px solid var(--green);}
+.lb-member-row--warn{border-left-color:var(--amber);background:#fef9ee;}
+.lb-member-name{font-size:11px;font-weight:700;color:#1a1a1a;}
+.lb-member-stats{display:flex;align-items:center;gap:8px;font-size:10px;color:#999;margin-top:2px;}
+.lb-member-progress{color:var(--ink-3);}
+.lb-member-alert{color:var(--amber);font-weight:600;}
+.lb-member-ok{color:var(--green);font-weight:600;}
+.lb-member-detail{margin-top:3px;padding-left:4px;}
+.lb-member-issue{font-size:9px;color:var(--amber);line-height:1.5;}
 </style>
 </body>
 </html>
