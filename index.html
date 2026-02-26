@@ -220,11 +220,17 @@ function CircleProgress({value,size=44,stroke=2.5,color}){
 
 function PathPopup({show,goal,onClose}){
   if(!show||!goal)return null;const p=goal.path||[];
-  const levels=[{label:"最上位",color:"var(--blue)"},{label:"中間",color:"var(--amber)"},{label:"中間",color:"var(--amber)"},{label:"中間",color:"var(--amber)"}];
+  const levels=[{label:"L1 大目標",color:"var(--blue)",bg:"var(--blue-light)"},{label:"L2 中間目標",color:"var(--amber)",bg:"var(--amber-light)"}];
   return(<div className="overlay" onClick={onClose}><div className="modal" onClick={e=>e.stopPropagation()}>
-    <div className="modal-head"><div><div className="modal-title">ゴールパス</div><div className="modal-sub">上位からフォーカスゴールまでの経路</div></div><button className="modal-close" onClick={onClose}><Icon.close/></button></div>
-    <div className="path-list">{p.map((step,i)=>{const isLast=i===p.length-1;const lv=isLast?{label:"フォーカスゴール",color:"var(--green)"}:(levels[i]||levels[1]);return(
-      <div key={i} className="path-item"><div className="path-rail"><div className="path-dot" style={{background:lv.color}}/>{!isLast&&<div className="path-line"/>}</div><div className={"path-body"+(isLast?" path-body--leaf":"")}><span className="path-label" style={{color:lv.color}}>{lv.label}</span><span className="path-text">{step}</span></div></div>);})}</div>
+    <div className="modal-head"><div><div className="modal-title">ゴールパス</div><div className="modal-sub">上位ゴールからフォーカスゴールまでの経路</div></div><button className="modal-close" onClick={onClose}><Icon.close/></button></div>
+    <div className="path-list">
+      {p.map((step,i)=>(
+        <div key={i} className="path-item"><div className="path-rail"><div className="path-dot" style={{background:levels[i]?.color||'var(--amber)'}}/><div className="path-line"/></div>
+          <div className="path-body"><span className="path-label" style={{color:levels[i]?.color||'var(--amber)'}}>{levels[i]?.label||'L2'}</span><span className="path-text">{step}</span></div></div>
+      ))}
+      <div className="path-item"><div className="path-rail"><div className="path-dot" style={{background:'var(--green)'}}/></div>
+        <div className="path-body path-body--leaf"><span className="path-label" style={{color:'var(--green)'}}>L3 フォーカスゴール</span><span className="path-text">{goal.title}</span></div></div>
+    </div>
   </div></div>);
 }
 
